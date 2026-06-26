@@ -11,7 +11,7 @@
 ================================================================
 
   1. Place your .qsf files in the "input" folder
-  2. Double-click QualtricsToLime_v2.exe
+  2. Double-click QualtricsToLime.exe
   3. Find your .lss files and conversion report in the "output" folder
 
   No Python installation or other software is required.
@@ -291,11 +291,4 @@
     for transparency and auditability. You can inspect exactly
     what the application does, modify it, or run it directly
     with Python instead of using the .exe.
-
-  SUITABLE FOR RESEARCH DATA
-    Because the tool is fully offline and processes files
-    locally, it is suitable for use with sensitive research
-    data and survey instruments under ethics board / IRB
-    requirements.
-
 ================================================================
