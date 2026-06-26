@@ -1,0 +1,5 @@
+# Keep input/output folders but ignore their contents
+input/*
+!input/.gitkeep
+output/*
+!output/.gitkeep
