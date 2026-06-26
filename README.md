@@ -2,6 +2,8 @@
 
 **Converts Qualtrics Survey Files (.qsf) to LimeSurvey Structure files (.lss) with full reporting and verification.**
 
+Migrating surveys between platforms usually means rebuilding every question, answer option, and logic rule by hand — a tedious and error-prone process, especially for large or complex instruments. QualtricsToLime automates this by transferring the common components (questions, groups, answer choices, display logic, validation, piped text) so you don't have to start from scratch. The tool analyses your Qualtrics survey, converts what it can, and clearly flags anything that needs manual attention, giving you a solid starting point instead of a blank canvas.
+
 ---
 
 ## Quick Start
