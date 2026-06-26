@@ -1,0 +1,127 @@
+================================================================
+  QualtricsToLime — Process Monitor Verification Guide
+================================================================
+
+  This guide shows how to use Microsoft's Process Monitor
+  (ProcMon) to independently verify that QualtricsToLime
+  only accesses files in its own input/output folders and
+  makes zero network connections.
+
+================================================================
+  STEP 1 — Download Process Monitor
+================================================================
+
+  1. Go to: https://learn.microsoft.com/en-us/sysinternals/downloads/procmon
+  2. Download ProcessMonitor.zip
+  3. Extract it anywhere (no installation needed)
+  4. Right-click Procmon.exe > Run as Administrator
+
+================================================================
+  STEP 2 — Set up filters
+================================================================
+
+  In Process Monitor:
+
+  1. Go to Filter > Filter... (or press Ctrl+L)
+  2. Clear any existing filters with "Reset"
+  3. Add these filters one by one:
+
+     Process Name | is | QualtricsToLime.exe | Include
+     (Click Add after each)
+
+  4. Click Apply, then OK
+
+  This filters the view to ONLY show activity from the
+  QualtricsToLime application.
+
+================================================================
+  STEP 3 — Prepare the test
+================================================================
+
+  1. Place at least one .qsf file in the input/ folder
+  2. Make sure Process Monitor is running and capturing
+     (the magnifying glass icon should show a green check)
+  3. Clear the current capture: Edit > Clear Display (Ctrl+X)
+
+================================================================
+  STEP 4 — Run the application
+================================================================
+
+  1. Double-click QualtricsToLime.exe (or QualtricsToLime_v2.exe)
+  2. Wait for the conversion to complete
+  3. Press Enter to close the application
+  4. Go back to Process Monitor
+
+================================================================
+  STEP 5 — Analyse the results
+================================================================
+
+  VERIFY NO NETWORK ACTIVITY:
+  1. In Process Monitor, go to Tools > Network Summary
+  2. This should show NO entries for QualtricsToLime.exe
+  3. Alternatively, filter by Operation:
+     Operation | is | TCP Connect | Include
+     Operation | is | TCP Send    | Include
+     Operation | is | UDP Send    | Include
+     — The result should be EMPTY
+
+  VERIFY FILE ACCESS:
+  1. Go to Tools > File Summary
+  2. Review the paths accessed
+  3. All file reads should be within the input/ folder
+  4. All file writes should be within the output/ folder
+  5. Other file accesses will be Python runtime files
+     (DLLs, .pyc files in the temp extraction folder)
+     — these are normal for PyInstaller executables
+
+  VERIFY NO UNEXPECTED PROCESSES:
+  1. Go to Tools > Process Tree
+  2. QualtricsToLime.exe should appear with no child
+     processes (no shells, no background tasks)
+
+================================================================
+  STEP 6 — Save the evidence
+================================================================
+
+  1. File > Save (Ctrl+S)
+  2. Choose "All events" and save as a .PML file
+  3. This file can be shared as independent proof of the
+     application's behavior
+
+  For a more portable format:
+  1. File > Save... > choose CSV format
+  2. This creates a spreadsheet-compatible log of all
+     file and network operations
+
+================================================================
+  WHAT TO EXPECT
+================================================================
+
+  A typical capture will show:
+
+  NORMAL OPERATIONS (expected):
+  - CreateFile / ReadFile on input/*.qsf files
+  - CreateFile / WriteFile on output/*.lss files
+  - CreateFile / WriteFile on output/conversion_report_*.txt
+  - ReadFile on Python DLLs (python310.dll, etc.)
+  - ReadFile on temp folder (_MEIxxxxx — PyInstaller runtime)
+
+  SHOULD NOT APPEAR:
+  - TCP Connect, TCP Send, UDP Send (network)
+  - WriteFile outside the output/ folder
+  - Process Create (launching other programs)
+  - Registry writes (beyond normal Python startup)
+
+================================================================
+  ALTERNATIVE: Windows Resource Monitor (simpler)
+================================================================
+
+  For a quick network-only check without installing anything:
+
+  1. Press Ctrl+Shift+Esc to open Task Manager
+  2. Click "Performance" tab > "Open Resource Monitor" (bottom)
+  3. Go to the "Network" tab
+  4. Run QualtricsToLime.exe
+  5. Verify it does NOT appear in the network activity list
+
+================================================================

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<procmon-configuration>
+  <FilterRules>
+    <FilterRule>
+      <Column>ProcessName</Column>
+      <Relation>is</Relation>
+      <Action>Include</Action>
+      <Value>QualtricsToLime.exe</Value>
+    </FilterRule>
+    <FilterRule>
+      <Column>ProcessName</Column>
+      <Relation>is</Relation>
+      <Action>Include</Action>
+      <Value>QualtricsToLime_v2.exe</Value>
+    </FilterRule>
+  </FilterRules>
+</procmon-configuration>
