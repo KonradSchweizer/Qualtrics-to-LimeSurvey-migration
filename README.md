@@ -8,9 +8,11 @@ Migrating surveys between platforms usually means rebuilding every question, ans
 
 ## Quick Start
 
-1. Place your `.qsf` files in the `input/` folder
-2. Double-click `QualtricsToLime.exe`
-3. Find your `.lss` files and conversion report in the `output/` folder
+1. Export your survey from Qualtrics as a `.qsf` file (see [Exporting from Qualtrics](#exporting-from-qualtrics) below)
+2. Place the `.qsf` file(s) in the `input/` folder
+3. Double-click `QualtricsToLime.exe`
+4. Find your `.lss` files and conversion report in the `output/` folder
+5. Import the `.lss` file into LimeSurvey (see [Importing into LimeSurvey](#importing-into-limesurvey) below)
 
 No Python installation or other software is required.
 
@@ -176,20 +178,47 @@ python source/qsf_inspector.py input/survey.qsf
 
 ---
 
+## Exporting from Qualtrics
+
+To get a `.qsf` file from Qualtrics:
+
+1. Log in to your Qualtrics account
+2. Open the survey you want to export
+3. Click the **three-dot menu (...)** next to the survey name, or go to **Survey Options**
+4. Select **Export Survey**
+5. Choose **QSF** (Qualtrics Survey Format) — this is the default
+6. Click **Export** — a `.qsf` file will be downloaded to your computer
+7. Move the downloaded `.qsf` file into the `input/` folder
+
+> **Tip:** You can export multiple surveys and place them all in the `input/` folder at once. The converter will process them all in a single run.
+
+> **Note:** The `.qsf` file contains only the survey structure (questions, logic, settings) — it does **not** include response data. Your collected responses stay safely in Qualtrics.
+
+---
+
 ## Importing into LimeSurvey
 
+To import the converted `.lss` file into LimeSurvey:
+
 1. Log in to your LimeSurvey administration panel
-2. Go to **Surveys > Create a new survey > Import**
-3. Select the `.lss` file from the output folder
-4. Click **Import**
+2. On the home page, click **Create a new survey**
+3. Switch to the **Import** tab at the top
+4. Click **Browse** and select the `.lss` file from the `output/` folder
+5. Click **Import survey**
+6. LimeSurvey will show a summary of what was imported (groups, questions, answers)
 
-After importing, review the following:
+### After importing — review checklist
 
-- Check all questions rendered correctly
-- Verify display logic / relevance equations work
-- Set up any embedded data fields as URL parameters (Survey settings > Panel integration)
-- Review any questions flagged with warnings in the report
-- Test the survey in preview mode before activating
+- [ ] Open the survey and click through each question group to verify questions rendered correctly
+- [ ] Check that answer options and subquestions are complete and in the right order
+- [ ] Test display logic by previewing the survey and triggering the conditions
+- [ ] Search the survey for `FIXME` — these mark expressions that need manual adjustment
+- [ ] Set up embedded data fields as URL parameters (go to **Survey settings > Panel integration**)
+- [ ] Review any questions flagged with warnings in the conversion report
+- [ ] Preview the full survey from start to finish before activating
+- [ ] If satisfied, activate the survey under **Survey settings > Overview > Activate this survey**
+
+> **Tip:** Keep the conversion report (`output/conversion_report_*.txt`) as a reference while reviewing. It tells you exactly which questions have warnings and what to look out for.
 
 ---
 
