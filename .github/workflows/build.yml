@@ -1,0 +1,69 @@
+name: Build executables
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            package_name: QualtricsToLime-Windows
+            binary: QualtricsToLime.exe
+          - os: macos-13
+            package_name: QualtricsToLime-macOS-Intel
+            binary: QualtricsToLime
+          - os: macos-14
+            package_name: QualtricsToLime-macOS-AppleSilicon
+            binary: QualtricsToLime
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+
+      - name: Build executable
+        run: pyinstaller --onefile --name QualtricsToLime --paths source source/app.py
+
+      - name: Assemble package folder
+        shell: bash
+        run: |
+          mkdir -p package/input package/output
+          cp "dist/${{ matrix.binary }}" package/
+          cp README.md package/ 2>/dev/null || true
+          touch package/input/.gitkeep package/output/.gitkeep
+
+      - name: Zip package
+        shell: bash
+        run: |
+          cd package
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            7z a "../${{ matrix.package_name }}.zip" .
+          else
+            zip -r "../${{ matrix.package_name }}.zip" .
+          fi
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.package_name }}
+          path: ${{ matrix.package_name }}.zip
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.package_name }}.zip
