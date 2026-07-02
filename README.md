@@ -6,11 +6,29 @@ Migrating surveys between platforms usually means rebuilding every question, ans
 
 ---
 
+## Download
+
+Grab the build for your operating system from the [**Releases page**](https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases):
+
+| Your computer | Download |
+|---|---|
+| Windows | `QualtricsToLime-Windows.zip` |
+| Mac with Apple Silicon (M1/M2/M3/M4) | `QualtricsToLime-macOS-AppleSilicon.zip` |
+| Mac with Intel processor | `QualtricsToLime-macOS-Intel.zip` |
+
+> **Which Mac do I have?** Click the Apple menu () → **About This Mac**. If it says "Apple M1/M2/M3/M4" (or "Chip"), use the Apple Silicon build. If it says "Intel", use the Intel build.
+
+Unzip the download anywhere you like, then follow the Quick Start below.
+
+---
+
 ## Quick Start
 
 1. Export your survey from Qualtrics as a `.qsf` file (see [Exporting from Qualtrics](#exporting-from-qualtrics) below)
 2. Place the `.qsf` file(s) in the `input/` folder
-3. Double-click `QualtricsToLime.exe`
+3. Run the converter:
+   - **Windows:** double-click `QualtricsToLime.exe`
+   - **Mac:** the first time only, **right-click** `QualtricsToLime` → **Open** → **Open** (this clears Apple's security warning — see [Troubleshooting](#troubleshooting)). After that you can double-click as usual.
 4. Find your `.lss` files and conversion report in the `output/` folder
 5. Import the `.lss` file into LimeSurvey (see [Importing into LimeSurvey](#importing-into-limesurvey) below)
 
@@ -250,6 +268,9 @@ Search the `.lss` file for `FIXME` to find expressions that need manual adjustme
 
 **Windows SmartScreen warning**
 The `.exe` is not code-signed. Click "More info" then "Run anyway" to proceed.
+
+**macOS "cannot be opened" / "unidentified developer" warning**
+The Mac build is not code-signed by Apple. The first time you run it, **do not double-click** — instead **right-click (or Control-click) the `QualtricsToLime` file → Open → Open**. This only needs to be done once; afterwards it opens normally. If macOS still blocks it, go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway**.
 
 ---
 
