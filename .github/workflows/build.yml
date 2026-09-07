@@ -18,7 +18,7 @@ jobs:
           - os: windows-latest
             package_name: QualtricsToLime-Windows
             binary: QualtricsToLime.exe
-          - os: macos-13
+          - os: macos-15-intel
             package_name: QualtricsToLime-macOS-Intel
             binary: QualtricsToLime
           - os: macos-14
