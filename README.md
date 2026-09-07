@@ -20,17 +20,39 @@ Grab the build for your operating system from the [**Releases page**](https://gi
 
 Unzip the download anywhere you like, then follow the Quick Start below.
 
+Each download contains **two programs** that do exactly the same conversion:
+
+| Program | Best for |
+|---|---|
+| `QualtricsToLimeGUI` | Most users — a window where you pick or drag & drop `.qsf` files and read the results on screen |
+| `QualtricsToLime` | Scripting and batch runs — drop files in `input/`, run, collect from `output/`, no clicks needed |
+
 ---
 
 ## Quick Start
 
+### Option A — the window (recommended)
+
 1. Export your survey from Qualtrics as a `.qsf` file (see [Exporting from Qualtrics](#exporting-from-qualtrics) below)
+2. Start the program:
+   - **Windows:** double-click `QualtricsToLimeGUI.exe`
+   - **Mac:** the first time only, **right-click** `QualtricsToLimeGUI.app` → **Open** → **Open** (this clears Apple's security warning — see [Troubleshooting](#troubleshooting)). After that you can double-click as usual.
+3. Drag your `.qsf` files (or a whole folder) onto the window, or click **Add files…**
+4. Optionally choose an output folder (**Change…**; by default the `.lss` lands next to each `.qsf`)
+5. Press **Convert**. Each file gets a status line; click it to see the input analysis, the output summary and the verification checks
+6. Import the `.lss` file into LimeSurvey (see [Importing into LimeSurvey](#importing-into-limesurvey) below)
+
+### Option B — the folder-based converter
+
+1. Export your survey from Qualtrics as a `.qsf` file
 2. Place the `.qsf` file(s) in the `input/` folder
 3. Run the converter:
    - **Windows:** double-click `QualtricsToLime.exe`
-   - **Mac:** the first time only, **right-click** `QualtricsToLime` → **Open** → **Open** (this clears Apple's security warning — see [Troubleshooting](#troubleshooting)). After that you can double-click as usual.
+   - **Mac:** the first time only, **right-click** `QualtricsToLime` → **Open** → **Open**. After that you can double-click as usual.
 4. Find your `.lss` files and conversion report in the `output/` folder
-5. Import the `.lss` file into LimeSurvey (see [Importing into LimeSurvey](#importing-into-limesurvey) below)
+5. Import the `.lss` file into LimeSurvey
+
+Both options run the same analysis, conversion and verification, and both write the same timestamped conversion report.
 
 No Python installation or other software is required.
 
@@ -41,7 +63,8 @@ No Python installation or other software is required.
 ```
 QualtricsToLime/
 |
-|-- QualtricsToLime.exe           The converter application
+|-- QualtricsToLimeGUI.exe        The converter with a window (drag & drop)
+|-- QualtricsToLime.exe           The folder-based converter (input/ -> output/)
 |-- README.md                     This file
 |
 |-- input/                        Place .qsf files here before running
@@ -51,7 +74,8 @@ QualtricsToLime/
 |   |-- conversion_report_*.txt      Detailed report document
 |
 |-- source/                       Python source code
-    |-- app.py                       Main application entry point
+    |-- gui.py                       Window application entry point
+    |-- app.py                       Folder-based application entry point
     |-- convert.py                   CLI entry point
     |-- qsf_to_lss.py               Core converter (QSF JSON -> LSS XML)
     |-- qsf_inspector.py            QSF audit and analysis tool
@@ -175,9 +199,14 @@ Unmapped types default to `T` (Long Free Text) with a warning.
 
 ## Running from Source
 
-Requires **Python 3.10+**. No external dependencies — stdlib only.
+Requires **Python 3.10+**. The converter itself has no external dependencies — stdlib only.
+The window version uses Tkinter (included with Python); drag & drop additionally needs
+`pip install tkinterdnd2` (optional — without it the drop area becomes a click-to-browse area).
 
 ```bash
+# Window application (drag & drop, on-screen results)
+python source/gui.py
+
 # Single file conversion
 python source/convert.py input/survey.qsf -o output/survey.lss
 
@@ -255,7 +284,10 @@ To import the converted `.lss` file into LimeSurvey:
 ## Troubleshooting
 
 **"No .qsf files found"**
-Make sure your files are in the `input/` folder and have the `.qsf` extension. The converter does not look in subfolders.
+Make sure your files are in the `input/` folder and have the `.qsf` extension. The folder-based converter does not look in subfolders (the window version does, when you drop a folder).
+
+**The window version does not start / closes immediately**
+Run `QualtricsToLime.exe` (the console version) instead — it shows any error message on screen. Or run `python source/gui.py` from a terminal to see the full error.
 
 **Question count mismatch warning**
 This is usually expected. The QSF inspector counts all question elements including those in Trash blocks, while the converter only processes active blocks.
@@ -280,8 +312,8 @@ The Mac build is not code-signed by Apple. The first time you run it, **do not d
 |---|---|
 | **Fully Offline** | Runs 100% offline. No internet connection, no data sent to any server. All processing happens locally on your machine. |
 | **No Data Collection** | Does not collect, store, or transmit any personal data, survey responses, or usage analytics. Your survey files never leave your computer. |
-| **No External Dependencies** | Uses only the Python standard library. No third-party packages that could introduce supply chain risks or phone-home behavior. |
-| **Local File Access Only** | Only reads from the `input/` folder and writes to the `output/` folder. Does not access any other files or directories on your system. |
+| **No External Dependencies** | The converter uses only the Python standard library. The window version bundles one extra component for drag & drop, [tkdnd](https://github.com/petasis/tkdnd) via `tkinterdnd2` — an open-source Tk extension that only handles the drop events; it has no network code. The console version has no third-party code at all. |
+| **Local File Access Only** | The console version only reads from the `input/` folder and writes to the `output/` folder. The window version reads the `.qsf` files you choose and writes to the output folder you choose. Nothing else on your system is touched. |
 | **Self-Contained Executable** | Built with PyInstaller, bundles a Python interpreter with the source code. No installation required, no files written outside the application folder. |
 | **Source Code Included** | Full source code in the `source/` folder for transparency and auditability. Inspect, modify, or run directly with Python instead of the `.exe`. |
 | **Suitable for Research Data** | Fully offline and local processing makes it suitable for sensitive research data and survey instruments under ethics board / IRB requirements. |
@@ -295,4 +327,4 @@ The Mac build is not code-signed by Apple. The first time you run it, **do not d
 | **Idea & concept** | Konrad Schweizer |
 | **Implementation** | Claude Opus 4.8 (Anthropic) |
 
-Python 3.10+ | stdlib only | no external dependencies
+Python 3.10+ | converter: stdlib only | window version: Tkinter + optional tkinterdnd2 for drag & drop

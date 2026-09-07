@@ -32,17 +32,25 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install PyInstaller
-        run: pip install pyinstaller
+      - name: Install PyInstaller (+ drag & drop extension for the GUI)
+        run: pip install pyinstaller tkinterdnd2
 
-      - name: Build executable
+      - name: Build console executable
         run: pyinstaller --onefile --name QualtricsToLime --paths source source/app.py
+
+      - name: Build GUI executable (windowed)
+        run: pyinstaller QualtricsToLimeGUI.spec --noconfirm
 
       - name: Assemble package folder
         shell: bash
         run: |
           mkdir -p package/input package/output
           cp "dist/${{ matrix.binary }}" package/
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp dist/QualtricsToLimeGUI.exe package/
+          else
+            cp -R dist/QualtricsToLimeGUI.app package/
+          fi
           cp README.md package/ 2>/dev/null || true
           touch package/input/.gitkeep package/output/.gitkeep
 
