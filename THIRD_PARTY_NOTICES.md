@@ -11,5 +11,10 @@ executables also bundle the following open-source components. Each one keeps its
 | [tkinterdnd2](https://github.com/Eliav2/tkinterdnd2) | Drag & drop (GUI only) | [MIT](https://github.com/Eliav2/tkinterdnd2/blob/master/LICENSE) |
 | [tkdnd](https://github.com/petasis/tkdnd) | Native drag & drop extension used by tkinterdnd2 (GUI only) | [BSD-style (Tcl license terms)](https://github.com/petasis/tkdnd/blob/master/license.terms) |
 
+The project website (`docs/`) self-hosts the fonts [Fraunces](https://github.com/undercasetype/Fraunces),
+[Instrument Sans](https://github.com/Instrument/instrument-sans) and
+[JetBrains Mono](https://github.com/JetBrains/JetBrainsMono), all under the
+[SIL Open Font License 1.1](https://openfontlicense.org/).
+
 "Qualtrics" and "LimeSurvey" are trademarks of their respective owners. This project is
 independent. It is not affiliated with, endorsed by or sponsored by either of them.
