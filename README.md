@@ -1,10 +1,12 @@
-# QualtricsToLime
+# QSF2LSS
 
 **Converts Qualtrics Survey Files (.qsf) to LimeSurvey Structure files (.lss) with full reporting and verification.**
 
+*Formerly called QualtricsToLime. QSF2LSS is an independent, unofficial tool and is not affiliated with, endorsed by or sponsored by Qualtrics or LimeSurvey. The code was created with AI (Claude, by Anthropic). MIT-licensed, provided as-is without warranty.*
+
 **🌐 Website, step-by-step demo and how it works: https://konradschweizer.github.io/Qualtrics-to-LimeSurvey-migration/**
 
-Migrating surveys between platforms usually means rebuilding every question, answer option, and logic rule by hand — a tedious and error-prone process, especially for large or complex instruments. QualtricsToLime automates this by transferring the common components (questions, groups, answer choices, display logic, validation, piped text) so you don't have to start from scratch. The tool analyses your Qualtrics survey, converts what it can, and clearly flags anything that needs manual attention, giving you a solid starting point instead of a blank canvas.
+Migrating surveys between platforms usually means rebuilding every question, answer option, and logic rule by hand — a tedious and error-prone process, especially for large or complex instruments. QSF2LSS automates this by transferring the common components (questions, groups, answer choices, display logic, validation, piped text) so you don't have to start from scratch. The tool analyses your Qualtrics survey, converts what it can, and clearly flags anything that needs manual attention, giving you a solid starting point instead of a blank canvas.
 
 ---
 
@@ -14,9 +16,9 @@ Grab the build for your operating system from the [**Releases page**](https://gi
 
 | Your computer | Download |
 |---|---|
-| Windows | `QualtricsToLime-Windows.zip` |
-| Mac with Apple Silicon (M1/M2/M3/M4) | `QualtricsToLime-macOS-AppleSilicon.zip` |
-| Mac with Intel processor | `QualtricsToLime-macOS-Intel.zip` |
+| Windows | `QSF2LSS-Windows.zip` |
+| Mac with Apple Silicon (M1/M2/M3/M4) | `QSF2LSS-macOS-AppleSilicon.zip` |
+| Mac with Intel processor | `QSF2LSS-macOS-Intel.zip` |
 
 > **Which Mac do I have?** Click the Apple menu () → **About This Mac**. If it says "Apple M1/M2/M3/M4" (or "Chip"), use the Apple Silicon build. If it says "Intel", use the Intel build.
 
@@ -26,8 +28,8 @@ Each download contains **two programs** that do exactly the same conversion:
 
 | Program | Best for |
 |---|---|
-| `QualtricsToLimeGUI` | Most users — a window where you pick or drag & drop `.qsf` files and read the results on screen |
-| `QualtricsToLime` | Scripting and batch runs — drop files in `input/`, run, collect from `output/`, no clicks needed |
+| `QSF2LSS-GUI` | Most users — a window where you pick or drag & drop `.qsf` files and read the results on screen |
+| `QSF2LSS` | Scripting and batch runs — drop files in `input/`, run, collect from `output/`, no clicks needed |
 
 ---
 
@@ -37,8 +39,8 @@ Each download contains **two programs** that do exactly the same conversion:
 
 1. Export your survey from Qualtrics as a `.qsf` file (see [Exporting from Qualtrics](#exporting-from-qualtrics) below)
 2. Start the program:
-   - **Windows:** double-click `QualtricsToLimeGUI.exe`
-   - **Mac:** the first time only, **right-click** `QualtricsToLimeGUI.app` → **Open** → **Open** (this clears Apple's security warning — see [Troubleshooting](#troubleshooting)). After that you can double-click as usual.
+   - **Windows:** double-click `QSF2LSS-GUI.exe`
+   - **Mac:** the first time only, **right-click** `QSF2LSS-GUI.app` → **Open** → **Open** (this clears Apple's security warning — see [Troubleshooting](#troubleshooting)). After that you can double-click as usual.
 3. Drag your `.qsf` files (or a whole folder) onto the window, or click **Add files…**
 4. Optionally choose an output folder (**Change…**; by default the `.lss` lands next to each `.qsf`)
 5. Press **Convert**. Each file gets a status line; click it to see the input analysis, the output summary and the verification checks
@@ -49,8 +51,8 @@ Each download contains **two programs** that do exactly the same conversion:
 1. Export your survey from Qualtrics as a `.qsf` file
 2. Place the `.qsf` file(s) in the `input/` folder
 3. Run the converter:
-   - **Windows:** double-click `QualtricsToLime.exe`
-   - **Mac:** the first time only, **right-click** `QualtricsToLime` → **Open** → **Open**. After that you can double-click as usual.
+   - **Windows:** double-click `QSF2LSS.exe`
+   - **Mac:** the first time only, **right-click** `QSF2LSS` → **Open** → **Open**. After that you can double-click as usual.
 4. Find your `.lss` files and conversion report in the `output/` folder
 5. Import the `.lss` file into LimeSurvey
 
@@ -63,10 +65,10 @@ No Python installation or other software is required.
 ## Folder Structure
 
 ```
-QualtricsToLime/
+QSF2LSS/
 |
-|-- QualtricsToLimeGUI.exe        The converter with a window (drag & drop)
-|-- QualtricsToLime.exe           The folder-based converter (input/ -> output/)
+|-- QSF2LSS-GUI.exe        The converter with a window (drag & drop)
+|-- QSF2LSS.exe           The folder-based converter (input/ -> output/)
 |-- README.md                     This file
 |
 |-- input/                        Place .qsf files here before running
@@ -289,7 +291,7 @@ To import the converted `.lss` file into LimeSurvey:
 Make sure your files are in the `input/` folder and have the `.qsf` extension. The folder-based converter does not look in subfolders (the window version does, when you drop a folder).
 
 **The window version does not start / closes immediately**
-Run `QualtricsToLime.exe` (the console version) instead — it shows any error message on screen. Or run `python source/gui.py` from a terminal to see the full error.
+Run `QSF2LSS.exe` (the console version) instead — it shows any error message on screen. Or run `python source/gui.py` from a terminal to see the full error.
 
 **Question count mismatch warning**
 This is usually expected. The QSF inspector counts all question elements including those in Trash blocks, while the converter only processes active blocks.
@@ -304,7 +306,7 @@ Search the `.lss` file for `FIXME` to find expressions that need manual adjustme
 The `.exe` is not code-signed. Click "More info" then "Run anyway" to proceed.
 
 **macOS "cannot be opened" / "unidentified developer" warning**
-The Mac build is not code-signed by Apple. The first time you run it, **do not double-click** — instead **right-click (or Control-click) the `QualtricsToLime` file → Open → Open**. This only needs to be done once; afterwards it opens normally. If macOS still blocks it, go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway**.
+The Mac build is not code-signed by Apple. The first time you run it, **do not double-click** — instead **right-click (or Control-click) the `QSF2LSS` file → Open → Open**. This only needs to be done once; afterwards it opens normally. If macOS still blocks it, go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway**.
 
 ---
 

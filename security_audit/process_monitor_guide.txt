@@ -1,9 +1,9 @@
 ================================================================
-  QualtricsToLime — Process Monitor Verification Guide
+  QSF2LSS — Process Monitor Verification Guide
 ================================================================
 
   This guide shows how to use Microsoft's Process Monitor
-  (ProcMon) to independently verify that QualtricsToLime
+  (ProcMon) to independently verify that QSF2LSS
   only accesses files in its own input/output folders and
   makes zero network connections.
 
@@ -26,13 +26,13 @@
   2. Clear any existing filters with "Reset"
   3. Add these filters one by one:
 
-     Process Name | is | QualtricsToLime.exe | Include
+     Process Name | is | QSF2LSS.exe | Include
      (Click Add after each)
 
   4. Click Apply, then OK
 
   This filters the view to ONLY show activity from the
-  QualtricsToLime application.
+  QSF2LSS application.
 
 ================================================================
   STEP 3 — Prepare the test
@@ -47,7 +47,7 @@
   STEP 4 — Run the application
 ================================================================
 
-  1. Double-click QualtricsToLime.exe (or QualtricsToLime_v2.exe)
+  1. Double-click QSF2LSS.exe (or QSF2LSS_v2.exe)
   2. Wait for the conversion to complete
   3. Press Enter to close the application
   4. Go back to Process Monitor
@@ -58,7 +58,7 @@
 
   VERIFY NO NETWORK ACTIVITY:
   1. In Process Monitor, go to Tools > Network Summary
-  2. This should show NO entries for QualtricsToLime.exe
+  2. This should show NO entries for QSF2LSS.exe
   3. Alternatively, filter by Operation:
      Operation | is | TCP Connect | Include
      Operation | is | TCP Send    | Include
@@ -76,7 +76,7 @@
 
   VERIFY NO UNEXPECTED PROCESSES:
   1. Go to Tools > Process Tree
-  2. QualtricsToLime.exe should appear with no child
+  2. QSF2LSS.exe should appear with no child
      processes (no shells, no background tasks)
 
 ================================================================
@@ -121,7 +121,7 @@
   1. Press Ctrl+Shift+Esc to open Task Manager
   2. Click "Performance" tab > "Open Resource Monitor" (bottom)
   3. Go to the "Network" tab
-  4. Run QualtricsToLime.exe
+  4. Run QSF2LSS.exe
   5. Verify it does NOT appear in the network activity list
 
 ================================================================

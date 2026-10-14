@@ -5,13 +5,13 @@
       <Column>ProcessName</Column>
       <Relation>is</Relation>
       <Action>Include</Action>
-      <Value>QualtricsToLime.exe</Value>
+      <Value>QSF2LSS.exe</Value>
     </FilterRule>
     <FilterRule>
       <Column>ProcessName</Column>
       <Relation>is</Relation>
       <Action>Include</Action>
-      <Value>QualtricsToLime_v2.exe</Value>
+      <Value>QSF2LSS_v2.exe</Value>
     </FilterRule>
   </FilterRules>
 </procmon-configuration>

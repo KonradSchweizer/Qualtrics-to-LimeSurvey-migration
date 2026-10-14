@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>QualtricsToLime — Qualtrics to LimeSurvey converter</title>
+<title>QSF2LSS — Qualtrics to LimeSurvey converter</title>
 <meta name="description" content="Convert Qualtrics survey files (.qsf) to LimeSurvey structure files (.lss). Offline, free, open source — with a step-by-step demo and a detailed explanation of how the conversion works.">
 <style>
 /* Fonts are self-hosted (SIL Open Font License), so no request goes to Google. */
@@ -349,7 +349,7 @@ details.more .num{font-size:3.4rem;top:70px}
 <body>
 
 <nav><div class="wrap">
-  <a class="brand" href="#top">Qualtrics<span>To</span>Lime</a>
+  <a class="brand" href="#top">QSF<span>2</span>LSS</a>
   <a class="l" href="#guide">Guide</a>
   <a class="l" href="#details">How it works</a>
   <a class="l" href="#limits">Limitations</a>
@@ -362,15 +362,15 @@ details.more .num{font-size:3.4rem;top:70px}
   <p class="lede reveal d2">A free tool that converts a Qualtrics survey export (<code>.qsf</code>) into a file you can import into LimeSurvey (<code>.lss</code>). It saves you rebuilding the survey by hand. You'll still need to check the result.</p>
 
   <div class="dl reveal d3" id="download">
-    <a class="dl-main" id="dl-main" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-Windows.zip">
+    <a class="dl-main" id="dl-main" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QSF2LSS-Windows.zip">
       <span class="dl-ico" aria-hidden="true">↓</span>
-      <span><b id="dl-label">Download for Windows</b><small id="dl-meta">v1.1.0 · zip · 20 MB</small></span>
+      <span><b id="dl-label">Download for Windows</b><small id="dl-meta">v1.2.0 · zip · 20 MB</small></span>
     </a>
     <div class="dl-alt">
       <span>Other systems:</span>
-      <a data-os="win" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-Windows.zip">Windows <small>20 MB</small></a>
-      <a data-os="mac-arm" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-macOS-AppleSilicon.zip">Mac – Apple Silicon (M1–M4) <small>44 MB</small></a>
-      <a data-os="mac-intel" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-macOS-Intel.zip">Mac – Intel <small>47 MB</small></a>
+      <a data-os="win" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QSF2LSS-Windows.zip">Windows <small>20 MB</small></a>
+      <a data-os="mac-arm" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QSF2LSS-macOS-AppleSilicon.zip">Mac – Apple Silicon (M1–M4) <small>44 MB</small></a>
+      <a data-os="mac-intel" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QSF2LSS-macOS-Intel.zip">Mac – Intel <small>47 MB</small></a>
     </div>
     <ul class="dl-facts">
       <li>No installation: unzip and open</li>
@@ -387,11 +387,11 @@ details.more .num{font-size:3.4rem;top:70px}
   <h2>How to use it</h2>
   <ol class="quick">
     <li><b>Export</b> your survey in Qualtrics: <em>Tools / … menu → Export survey → QSF</em>.</li>
-    <li><b>Open</b> <code>QualtricsToLimeGUI</code> and drag the <code>.qsf</code> file onto the window.</li>
+    <li><b>Open</b> <code>QSF2LSS-GUI</code> and drag the <code>.qsf</code> file onto the window.</li>
     <li><b>Convert.</b> Press <em>Convert</em> and read the checks. Amber lines show what to look at.</li>
     <li><b>Import</b> the <code>.lss</code> in LimeSurvey: <em>Create survey → Import</em>. Then test the survey before using it.</li>
   </ol>
-  <figure><img class="shot" src="img/04-results.png" alt="QualtricsToLime window after converting a demo survey: status, input and output summary" width="1202" height="792" loading="lazy"><figcaption>The program after converting the demo survey. Click to enlarge.</figcaption></figure>
+  <figure><img class="shot" src="img/04-results.png" alt="QSF2LSS window after converting a demo survey: status, input and output summary" width="1202" height="792" loading="lazy"><figcaption>The program after converting the demo survey. Click to enlarge.</figcaption></figure>
 
   <details class="more"><summary>Full walkthrough with screenshots</summary>
   <p class="intro">The walkthrough converts a small, made-up demo survey. You can <a href="demo/coffee_habits_demo.qsf" download>download the demo .qsf</a> to try it, and compare with <a href="demo/coffee_habits_demo.lss" download>the converted .lss</a>.</p>
@@ -424,12 +424,12 @@ details.more .num{font-size:3.4rem;top:70px}
   <div class="step">
     <div class="num">2</div>
     <div class="body">
-      <h3>Start QualtricsToLime</h3>
-      <p>Download the zip for your computer from the buttons at the top, unzip it anywhere and start <code>QualtricsToLimeGUI</code>. It opens one window. There is a drop zone at the top, a file list on the left, a details pane on the right and the controls along the bottom.</p>
-      <figure><img class="shot" src="img/01-start.png" alt="QualtricsToLime window right after starting: empty file list and details pane" width="1202" height="792" loading="lazy"><figcaption>Fig. 1. The empty window when the program starts.</figcaption></figure>
+      <h3>Start QSF2LSS</h3>
+      <p>Download the zip for your computer from the buttons at the top, unzip it anywhere and start <code>QSF2LSS-GUI</code>. It opens one window. There is a drop zone at the top, a file list on the left, a details pane on the right and the controls along the bottom.</p>
+      <figure><img class="shot" src="img/01-start.png" alt="QSF2LSS window right after starting: empty file list and details pane" width="1202" height="792" loading="lazy"><figcaption>Fig. 1. The empty window when the program starts.</figcaption></figure>
       <ul class="callouts">
-        <li><b>Windows</b>Double-click <code>QualtricsToLimeGUI.exe</code>. If SmartScreen warns you, click <em>More info → Run anyway</em> (the exe isn't code-signed).</li>
-        <li><b>macOS</b>The first time only, <em>right-click</em> <code>QualtricsToLimeGUI.app</code> → <em>Open</em> → <em>Open</em>. This clears Apple's “unidentified developer” warning.</li>
+        <li><b>Windows</b>Double-click <code>QSF2LSS-GUI.exe</code>. If SmartScreen warns you, click <em>More info → Run anyway</em> (the exe isn't code-signed).</li>
+        <li><b>macOS</b>The first time only, <em>right-click</em> <code>QSF2LSS-GUI.app</code> → <em>Open</em> → <em>Open</em>. This clears Apple's “unidentified developer” warning.</li>
       </ul>
     </div>
   </div>
@@ -529,7 +529,7 @@ details.more .num{font-size:3.4rem;top:70px}
       </ul>
     </div>
   </div>
-  <p class="note"><b>Prefer no clicking?</b> The download also includes <code>QualtricsToLime</code>, a folder-based version. Put <code>.qsf</code> files in <code>input/</code>, double-click it, and collect the results from <code>output/</code>.</p>
+  <p class="note"><b>Prefer no clicking?</b> The download also includes <code>QSF2LSS</code>, a folder-based version. Put <code>.qsf</code> files in <code>input/</code>, double-click it, and collect the results from <code>output/</code>.</p>
   </details>
 </div></section>
 
@@ -802,7 +802,7 @@ question_attributes:
   <details><summary>Do I need Python?</summary><div>No. The downloads bundle everything. If you prefer to run from source: Python 3.10+, then <code>python source/gui.py</code> (window) or <code>python source/convert.py input/ -o output/</code> (command line). For drag &amp; drop, also run <code>pip install tkinterdnd2</code>. Without it, the drop zone works as a click-to-browse button.</div></details>
   <details><summary>Windows says “Windows protected your PC”</summary><div>The exe isn't code-signed yet (see <a href="#signing">code signing policy</a>). Click <em>More info → Run anyway</em>. If you'd rather not, run from source or build it yourself; the GitHub Actions workflow in the repository shows exactly how the release builds are made.</div></details>
   <details><summary>macOS says the app “cannot be opened”</summary><div>Right-click (or Control-click) the app → <em>Open</em> → <em>Open</em>. You only need to do this once. If it's still blocked, go to <em>System Settings → Privacy &amp; Security</em> and click <em>Open Anyway</em>.</div></details>
-  <details><summary>The window doesn't open or closes immediately</summary><div>Run the console version <code>QualtricsToLime</code> instead. It prints any error message, or run <code>python source/gui.py</code> from a terminal to see the full error.</div></details>
+  <details><summary>The window doesn't open or closes immediately</summary><div>Run the console version <code>QSF2LSS</code> instead. It prints any error message, or run <code>python source/gui.py</code> from a terminal to see the full error.</div></details>
   <details><summary>Why does the question count differ?</summary><div>Usually it's expected. Questions in the Trash block aren't converted, and the inspector counts every question element, including unused ones.</div></details>
   <details><summary>Can I convert many surveys at once?</summary><div>Yes. Drop a whole folder onto the window, or put all files in <code>input/</code> for the folder-based version. One report covers the whole batch.</div></details>
 </div></section>
@@ -829,7 +829,7 @@ question_attributes:
 </div></section>
 
 <footer><div class="wrap">
-  <span>QualtricsToLime: a free, unofficial helper tool, not affiliated with Qualtrics or LimeSurvey.<br>Idea &amp; guidance: Konrad Schweizer · Code and this website created by AI (Claude, Anthropic). Provided as-is, without warranty.</span>
+  <span>QSF2LSS: a free, unofficial helper tool, not affiliated with Qualtrics or LimeSurvey.<br>Idea &amp; guidance: Konrad Schweizer · Code and this website created by AI (Claude, Anthropic). Provided as-is, without warranty.</span>
   <span><a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration">Source on GitHub</a> · <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases">Releases</a></span>
 </div></footer>
 
@@ -849,7 +849,7 @@ question_attributes:
       if (h && h.architecture === 'x86') pick = 'intel';
     } catch (e) {}
   }
-  main.href = links[pick].href; label.textContent = names[pick][0]; meta.textContent = 'v1.1.0 · zip · ' + names[pick][1];
+  main.href = links[pick].href; label.textContent = names[pick][0]; meta.textContent = 'v1.2.0 · zip · ' + names[pick][1];
   links[pick].classList.add('current');
 })();
 

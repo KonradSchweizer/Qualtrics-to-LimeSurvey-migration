@@ -1,6 +1,6 @@
 # Third-party components
 
-The QualtricsToLime source code is MIT-licensed (see `LICENSE`). The downloadable
+The QSF2LSS source code is MIT-licensed (see `LICENSE`). The downloadable
 executables also bundle the following open-source components. Each one keeps its own license:
 
 | Component | Used for | License |

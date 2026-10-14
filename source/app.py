@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-app.py — Standalone entry point for the QualtricsToLime .exe distribution.
+app.py — Standalone entry point for the QSF2LSS .exe distribution.
 
 Place .qsf files in the 'input' folder, run the exe, get .lss files in 'output'.
 Shows a report of input (QSF analysis), output (conversion results), and verification.
@@ -442,7 +442,7 @@ def main() -> int:
     w = ReportWriter()
 
     if not qsf_files:
-        w.header("QualtricsToLime Converter")
+        w.header("QSF2LSS Converter")
         w.blank()
         w.write(f"  No .qsf files found in: {input_dir}")
         w.blank()
@@ -456,7 +456,7 @@ def main() -> int:
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    w.header("QualtricsToLime — Conversion Report")
+    w.header("QSF2LSS — Conversion Report")
     w.write(f"  Date: {timestamp}")
     w.write(f"  Found {len(qsf_files)} .qsf file(s)")
     w.write(f"  Input:  {input_dir}")

@@ -16,14 +16,14 @@ jobs:
       matrix:
         include:
           - os: windows-latest
-            package_name: QualtricsToLime-Windows
-            binary: QualtricsToLime.exe
+            package_name: QSF2LSS-Windows
+            binary: QSF2LSS.exe
           - os: macos-15-intel
-            package_name: QualtricsToLime-macOS-Intel
-            binary: QualtricsToLime
+            package_name: QSF2LSS-macOS-Intel
+            binary: QSF2LSS
           - os: macos-14
-            package_name: QualtricsToLime-macOS-AppleSilicon
-            binary: QualtricsToLime
+            package_name: QSF2LSS-macOS-AppleSilicon
+            binary: QSF2LSS
     runs-on: ${{ matrix.os }}
     env:
       # Windows code signing via SignPath Foundation (free for open source).
@@ -48,13 +48,13 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then VERSION_ARG="--version-file build/version_info.txt"; fi
-          pyinstaller --onefile --name QualtricsToLime --paths source $VERSION_ARG source/app.py
+          pyinstaller --onefile --name QSF2LSS --paths source $VERSION_ARG source/app.py
 
       - name: Build GUI executable (windowed)
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then export QTL_VERSION_FILE="$PWD/build/version_info.txt"; fi
-          pyinstaller QualtricsToLimeGUI.spec --noconfirm
+          pyinstaller QSF2LSS-GUI.spec --noconfirm
 
       - name: Upload unsigned Windows executables for signing
         id: upload-unsigned
@@ -63,8 +63,8 @@ jobs:
         with:
           name: unsigned-windows-exes
           path: |
-            dist/QualtricsToLime.exe
-            dist/QualtricsToLimeGUI.exe
+            dist/QSF2LSS.exe
+            dist/QSF2LSS-GUI.exe
 
       - name: Sign Windows executables (SignPath)
         if: runner.os == 'Windows' && env.SIGNPATH_API_TOKEN != ''
@@ -81,7 +81,7 @@ jobs:
       - name: Use the signed executables
         if: runner.os == 'Windows' && env.SIGNPATH_API_TOKEN != ''
         shell: bash
-        run: cp signed/QualtricsToLime.exe signed/QualtricsToLimeGUI.exe dist/
+        run: cp signed/QSF2LSS.exe signed/QSF2LSS-GUI.exe dist/
 
       - name: Assemble package folder
         shell: bash
@@ -89,9 +89,9 @@ jobs:
           mkdir -p package/input package/output
           cp "dist/${{ matrix.binary }}" package/
           if [ "${{ runner.os }}" = "Windows" ]; then
-            cp dist/QualtricsToLimeGUI.exe package/
+            cp dist/QSF2LSS-GUI.exe package/
           else
-            cp -R dist/QualtricsToLimeGUI.app package/
+            cp -R dist/QSF2LSS-GUI.app package/
           fi
           cp README.md LICENSE THIRD_PARTY_NOTICES.md package/ 2>/dev/null || true
           touch package/input/.gitkeep package/output/.gitkeep

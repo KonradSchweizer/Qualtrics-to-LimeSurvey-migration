@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-gui.py — Graphical front end for the QualtricsToLime converter.
+gui.py — Graphical front end for the QSF2LSS converter.
 
 One window, no console:
   * pick .qsf files with a file dialog, or drag & drop them onto the window
@@ -13,7 +13,7 @@ the optional `tkinterdnd2` package (pip install tkinterdnd2); without it the
 program still works — the drop zone becomes a click-to-browse area.
 
 Run:   python gui.py
-Build: pyinstaller QualtricsToLimeGUI.spec
+Build: pyinstaller QSF2LSS-GUI.spec
 """
 
 from __future__ import annotations
@@ -55,7 +55,7 @@ except Exception:  # ImportError, or a broken native lib on an exotic platform
     TkinterDnD = None
     HAVE_DND = False
 
-APP_TITLE = "QualtricsToLime"
+APP_TITLE = "QSF2LSS"
 IS_MAC = platform.system() == "Darwin"
 
 # Colours (kept muted so the window looks native on both platforms)
@@ -420,7 +420,7 @@ class ConverterApp:
     def _worker(self, files: list[Path], out_for: dict[Path, Path]) -> None:
         w = ReportWriter()
         w.write = lambda text="": w.lines.append(text)  # silent: no console
-        w.header("QualtricsToLime — Conversion Report")
+        w.header("QSF2LSS — Conversion Report")
         w.write(f"  Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         w.write(f"  Found {len(files)} .qsf file(s)")
 

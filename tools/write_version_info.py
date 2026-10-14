@@ -4,7 +4,7 @@
 Usage: python tools/write_version_info.py v1.2.0 build/version_info.txt
 
 Code signing via SignPath requires every signed .exe to carry the product name
-"QualtricsToLime" and the same product version, so both executables are built
+"QSF2LSS" and the same product version, so both executables are built
 with the file this script writes.
 """
 import re
@@ -23,10 +23,10 @@ out.write_text(f"""VSVersionInfo(
   kids=[
     StringFileInfo([StringTable('040904B0', [
       StringStruct('CompanyName', 'Konrad Schweizer'),
-      StringStruct('FileDescription', 'QualtricsToLime - Qualtrics (.qsf) to LimeSurvey (.lss) converter'),
+      StringStruct('FileDescription', 'QSF2LSS - Qualtrics (.qsf) to LimeSurvey (.lss) converter'),
       StringStruct('FileVersion', '{version}'),
       StringStruct('LegalCopyright', 'Copyright (c) 2026 Konrad Schweizer. MIT License.'),
-      StringStruct('ProductName', 'QualtricsToLime'),
+      StringStruct('ProductName', 'QSF2LSS'),
       StringStruct('ProductVersion', '{version}')])]),
     VarFileInfo([VarStruct('Translation', [1033, 1200])])
   ]

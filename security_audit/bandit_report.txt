@@ -1,5 +1,5 @@
 ================================================================
-  QualtricsToLime — Security Audit (Bandit Static Analysis)
+  QSF2LSS — Security Audit (Bandit Static Analysis)
 ================================================================
 
   Tool:    Bandit 1.9.4 (Python security linter)
