@@ -1,0 +1,695 @@
+{
+ "SurveyEntry": {
+  "SurveyID": "SV_demo0000000001",
+  "SurveyName": "Coffee Habits (Demo)",
+  "SurveyDescription": null,
+  "SurveyLanguage": "EN",
+  "SurveyStatus": "Inactive",
+  "SurveyCreationDate": "2026-10-14 10:00:00",
+  "LastModified": "2026-10-14 10:00:00"
+ },
+ "SurveyElements": [
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "BL",
+   "PrimaryAttribute": "Survey Blocks",
+   "Payload": [
+    {
+     "Type": "Default",
+     "Description": "Welcome",
+     "ID": "BL_welcome",
+     "BlockElements": [
+      {
+       "Type": "Question",
+       "QuestionID": "QID1"
+      },
+      {
+       "Type": "Question",
+       "QuestionID": "QID2"
+      },
+      {
+       "Type": "Question",
+       "QuestionID": "QID12"
+      }
+     ]
+    },
+    {
+     "Type": "Standard",
+     "Description": "About you",
+     "ID": "BL_about",
+     "BlockElements": [
+      {
+       "Type": "Question",
+       "QuestionID": "QID3"
+      },
+      {
+       "Type": "Question",
+       "QuestionID": "QID4"
+      },
+      {
+       "Type": "Question",
+       "QuestionID": "QID5"
+      }
+     ]
+    },
+    {
+     "Type": "Standard",
+     "Description": "Coffee habits",
+     "ID": "BL_coffee",
+     "BlockElements": [
+      {
+       "Type": "Question",
+       "QuestionID": "QID6"
+      },
+      {
+       "Type": "Question",
+       "QuestionID": "QID7"
+      },
+      {
+       "Type": "Question",
+       "QuestionID": "QID8"
+      },
+      {
+       "Type": "Question",
+       "QuestionID": "QID9"
+      },
+      {
+       "Type": "Question",
+       "QuestionID": "QID10"
+      }
+     ]
+    },
+    {
+     "Type": "Standard",
+     "Description": "Feedback",
+     "ID": "BL_feedback",
+     "BlockElements": [
+      {
+       "Type": "Question",
+       "QuestionID": "QID11"
+      }
+     ]
+    },
+    {
+     "Type": "Trash",
+     "Description": "Trash / Unused Questions",
+     "ID": "BL_trash",
+     "BlockElements": [
+      {
+       "Type": "Question",
+       "QuestionID": "QID13"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "FL",
+   "PrimaryAttribute": "Survey Flow",
+   "Payload": {
+    "Type": "Root",
+    "FlowID": "FL_1",
+    "Flow": [
+     {
+      "Type": "EmbeddedData",
+      "FlowID": "FL_2",
+      "EmbeddedData": [
+       {
+        "Description": "source",
+        "Type": "Recipient",
+        "Field": "source",
+        "VariableType": "String"
+       },
+       {
+        "Description": "participant_id",
+        "Type": "Recipient",
+        "Field": "participant_id",
+        "VariableType": "String"
+       }
+      ]
+     },
+     {
+      "Type": "Block",
+      "ID": "BL_welcome",
+      "FlowID": "FL_3"
+     },
+     {
+      "Type": "Standard",
+      "ID": "BL_about",
+      "FlowID": "FL_4"
+     },
+     {
+      "Type": "Standard",
+      "ID": "BL_coffee",
+      "FlowID": "FL_5"
+     },
+     {
+      "Type": "Standard",
+      "ID": "BL_feedback",
+      "FlowID": "FL_6"
+     }
+    ]
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SO",
+   "PrimaryAttribute": "Survey Options",
+   "Payload": {
+    "BackButton": "true",
+    "SaveAndContinue": "true",
+    "SurveyName": "Coffee Habits (Demo)"
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "QC",
+   "PrimaryAttribute": "Survey Question Count",
+   "SecondaryAttribute": "13"
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID1",
+   "SecondaryAttribute": "<h3>Welcome!</h3><p>This short demo survey asks about your coffee habits. It takes about 2 minutes.</p>",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "<h3>Welcome!</h3><p>This short demo survey asks about your coffee habits. It takes about 2 minutes.</p>",
+    "DataExportTag": "intro",
+    "QuestionID": "QID1",
+    "QuestionType": "DB",
+    "Selector": "TB",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "<h3>Welcome!</h3><p>This short demo survey asks about your coffee habits. It takes about 2 minutes.</p>",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    }
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID2",
+   "SecondaryAttribute": "Do you agree to take part in this survey?",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "Do you agree to take part in this survey?",
+    "DataExportTag": "consent",
+    "QuestionID": "QID2",
+    "QuestionType": "MC",
+    "Selector": "SAVR",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "Do you agree to take part in this survey?",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "ON",
+      "ForceResponseType": "ON",
+      "Type": "None"
+     }
+    },
+    "Choices": {
+     "1": {
+      "Display": "Yes, I agree"
+     },
+     "2": {
+      "Display": "No"
+     }
+    },
+    "ChoiceOrder": [
+     "1",
+     "2"
+    ]
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID3",
+   "SecondaryAttribute": "What is your first name?",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "What is your first name?",
+    "DataExportTag": "name",
+    "QuestionID": "QID3",
+    "QuestionType": "TE",
+    "Selector": "SL",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "What is your first name?",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "ON",
+      "ForceResponseType": "ON",
+      "Type": "None"
+     }
+    }
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID4",
+   "SecondaryAttribute": "How old are you?",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "How old are you?",
+    "DataExportTag": "age",
+    "QuestionID": "QID4",
+    "QuestionType": "MC",
+    "Selector": "SAVR",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "How old are you?",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    },
+    "Choices": {
+     "1": {
+      "Display": "18–24"
+     },
+     "2": {
+      "Display": "25–34"
+     },
+     "3": {
+      "Display": "35–44"
+     },
+     "4": {
+      "Display": "45–64"
+     },
+     "5": {
+      "Display": "65+"
+     }
+    },
+    "ChoiceOrder": [
+     "1",
+     "2",
+     "3",
+     "4",
+     "5"
+    ]
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID5",
+   "SecondaryAttribute": "Where do you live?",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "Where do you live?",
+    "DataExportTag": "country",
+    "QuestionID": "QID5",
+    "QuestionType": "MC",
+    "Selector": "DL",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "Where do you live?",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    },
+    "Choices": {
+     "1": {
+      "Display": "Netherlands"
+     },
+     "2": {
+      "Display": "Germany"
+     },
+     "3": {
+      "Display": "Belgium"
+     },
+     "4": {
+      "Display": "United Kingdom"
+     },
+     "5": {
+      "Display": "Other"
+     }
+    },
+    "ChoiceOrder": [
+     "1",
+     "2",
+     "3",
+     "4",
+     "5"
+    ]
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID6",
+   "SecondaryAttribute": "Hi ${q://QID3/ChoiceTextEntryValue}, how many cups of coffee do you drink on a typical day?",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "Hi ${q://QID3/ChoiceTextEntryValue}, how many cups of coffee do you drink on a typical day?",
+    "DataExportTag": "cups",
+    "QuestionID": "QID6",
+    "QuestionType": "Slider",
+    "Selector": "HSLIDER",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText",
+     "CSSliderMin": 0,
+     "CSSliderMax": 10,
+     "GridLines": 10
+    },
+    "QuestionDescription": "Hi ${q://QID3/ChoiceTextEntryValue}, how many cups of coffee do you drink on a typical day?",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    },
+    "Choices": {
+     "1": {
+      "Display": "Cups per day"
+     }
+    },
+    "ChoiceOrder": [
+     "1"
+    ]
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID7",
+   "SecondaryAttribute": "Which coffee drinks do you order? (select all that apply)",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "Which coffee drinks do you order? (select all that apply)",
+    "DataExportTag": "drinks",
+    "QuestionID": "QID7",
+    "QuestionType": "MC",
+    "Selector": "MAVR",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "Which coffee drinks do you order? (select all that apply)",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    },
+    "Choices": {
+     "1": {
+      "Display": "Espresso"
+     },
+     "2": {
+      "Display": "Cappuccino"
+     },
+     "3": {
+      "Display": "Latte"
+     },
+     "4": {
+      "Display": "Filter coffee"
+     },
+     "5": {
+      "Display": "Cold brew"
+     }
+    },
+    "ChoiceOrder": [
+     "1",
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "DisplayLogic": {
+     "0": {
+      "0": {
+       "LeftOperand": "q://QID6/ChoiceNumericEntryValue/1",
+       "LogicType": "Question",
+       "Operator": "GreaterThan",
+       "RightOperand": "0",
+       "QuestionID": "QID6",
+       "QuestionIsInLoop": "no",
+       "Type": "Expression",
+       "Description": "If cups > 0"
+      },
+      "Type": "If"
+     },
+     "Type": "BooleanExpression",
+     "inPage": false
+    }
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID8",
+   "SecondaryAttribute": "How much do you agree with the following statements?",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "How much do you agree with the following statements?",
+    "DataExportTag": "attitudes",
+    "QuestionID": "QID8",
+    "QuestionType": "Matrix",
+    "Selector": "Likert",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "How much do you agree with the following statements?",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    },
+    "SubSelector": "SingleAnswer",
+    "Choices": {
+     "1": {
+      "Display": "Coffee helps me concentrate"
+     },
+     "2": {
+      "Display": "I drink coffee mostly out of habit"
+     },
+     "3": {
+      "Display": "I would like to drink less coffee"
+     }
+    },
+    "ChoiceOrder": [
+     "1",
+     "2",
+     "3"
+    ],
+    "Answers": {
+     "1": {
+      "Display": "Strongly disagree"
+     },
+     "2": {
+      "Display": "Disagree"
+     },
+     "3": {
+      "Display": "Neutral"
+     },
+     "4": {
+      "Display": "Agree"
+     },
+     "5": {
+      "Display": "Strongly agree"
+     }
+    },
+    "AnswerOrder": [
+     "1",
+     "2",
+     "3",
+     "4",
+     "5"
+    ],
+    "DisplayLogic": {
+     "0": {
+      "0": {
+       "LeftOperand": "q://QID6/ChoiceNumericEntryValue/1",
+       "LogicType": "Question",
+       "Operator": "GreaterThan",
+       "RightOperand": "0",
+       "QuestionID": "QID6",
+       "QuestionIsInLoop": "no",
+       "Type": "Expression",
+       "Description": "If cups > 0"
+      },
+      "Type": "If"
+     },
+     "Type": "BooleanExpression",
+     "inPage": false
+    }
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID9",
+   "SecondaryAttribute": "Rank what matters most to you in a coffee shop.",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "Rank what matters most to you in a coffee shop.",
+    "DataExportTag": "rank",
+    "QuestionID": "QID9",
+    "QuestionType": "RO",
+    "Selector": "DND",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "Rank what matters most to you in a coffee shop.",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    },
+    "Choices": {
+     "1": {
+      "Display": "Taste"
+     },
+     "2": {
+      "Display": "Price"
+     },
+     "3": {
+      "Display": "Atmosphere"
+     },
+     "4": {
+      "Display": "Location"
+     }
+    },
+    "ChoiceOrder": [
+     "1",
+     "2",
+     "3",
+     "4"
+    ]
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID10",
+   "SecondaryAttribute": "Timing",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "Timing",
+    "DataExportTag": "page_timer",
+    "QuestionID": "QID10",
+    "QuestionType": "Timing",
+    "Selector": "I",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "Timing",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    }
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID11",
+   "SecondaryAttribute": "Thanks ${q://QID3/ChoiceTextEntryValue}! Anything else you would like to tell us? (Source: ${e://Field/source})",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "Thanks ${q://QID3/ChoiceTextEntryValue}! Anything else you would like to tell us? (Source: ${e://Field/source})",
+    "DataExportTag": "comments",
+    "QuestionID": "QID11",
+    "QuestionType": "TE",
+    "Selector": "ESTB",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "Thanks ${q://QID3/ChoiceTextEntryValue}! Anything else you would like to tell us? (Source: ${e://Field/source})",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    },
+    "QuestionJS": "Qualtrics.SurveyEngine.addOnload(function(){ this.getChoiceContainer().style.minHeight='120px'; });"
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID12",
+   "SecondaryAttribute": "You chose not to take part. You can close this window now.",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "You chose not to take part. You can close this window now.",
+    "DataExportTag": "no_consent",
+    "QuestionID": "QID12",
+    "QuestionType": "DB",
+    "Selector": "TB",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "You chose not to take part. You can close this window now.",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    },
+    "DisplayLogic": {
+     "0": {
+      "0": {
+       "ChoiceLocator": "q://QID2/SelectableChoice/2",
+       "LeftOperand": "q://QID2/SelectableChoice/2",
+       "LogicType": "Question",
+       "Operator": "Selected",
+       "QuestionID": "QID2",
+       "QuestionIDFromLocator": "QID2",
+       "QuestionIsInLoop": "no",
+       "Type": "Expression",
+       "Description": "If consent = No"
+      },
+      "Type": "If"
+     },
+     "Type": "BooleanExpression",
+     "inPage": false
+    }
+   }
+  },
+  {
+   "SurveyID": "SV_demo0000000001",
+   "Element": "SQ",
+   "PrimaryAttribute": "QID13",
+   "SecondaryAttribute": "An old question that was deleted",
+   "TertiaryAttribute": null,
+   "Payload": {
+    "QuestionText": "An old question that was deleted",
+    "DataExportTag": "old_q",
+    "QuestionID": "QID13",
+    "QuestionType": "TE",
+    "Selector": "SL",
+    "Configuration": {
+     "QuestionDescriptionOption": "UseText"
+    },
+    "QuestionDescription": "An old question that was deleted",
+    "Validation": {
+     "Settings": {
+      "ForceResponse": "OFF",
+      "Type": "None"
+     }
+    }
+   }
+  }
+ ]
+}

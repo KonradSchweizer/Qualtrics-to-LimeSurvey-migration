@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QualtricsToLime — Qualtrics to LimeSurvey converter</title>
+<meta name="description" content="Convert Qualtrics survey files (.qsf) to LimeSurvey structure files (.lss). Offline, free, open source — with a step-by-step demo and a detailed explanation of how the conversion works.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f6f3ea; --paper-2:#efeadc; --card:#fffdf7; --ink:#1d1f1a; --ink-2:#4a4d44; --muted:#7a7d72;
+  --rule:#d9d3c0; --lime:#b7e04a; --lime-ink:#3f6b0a; --blue:#2c5a8f; --warn:#a75d00; --fail:#a3122a;
+  --code-bg:#1f2420; --code-ink:#e8eadf; --shadow:0 1px 0 rgba(0,0,0,.04),0 14px 40px -18px rgba(40,40,20,.35);
+  --serif:"Fraunces",Georgia,serif; --sans:"Instrument Sans",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{--paper:#141612;--paper-2:#1b1e18;--card:#1f231c;--ink:#ecebe3;--ink-2:#c3c4b8;--muted:#8e9184;
+    --rule:#33382d;--lime:#b7e04a;--lime-ink:#c4ec5c;--blue:#8fb7e8;--warn:#f0a34a;--fail:#ff7a8a;--code-bg:#0d0f0c;
+    --shadow:0 14px 40px -18px rgba(0,0,0,.8);}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 var(--sans);-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(rgba(120,110,80,.07) 1px,transparent 1px);background-size:22px 22px}
+a{color:var(--lime-ink);text-underline-offset:3px}
+code,pre,kbd{font-family:var(--mono);font-size:.86em}
+:not(pre)>code{background:var(--paper-2);border:1px solid var(--rule);padding:.08em .38em;border-radius:4px}
+kbd{border:1px solid var(--rule);border-bottom-width:2px;border-radius:4px;padding:0 .35em;background:var(--card)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.12;letter-spacing:-.01em;margin:0 0 .5em}
+h2{font-size:clamp(2rem,4.5vw,3rem)}
+h3{font-size:1.45rem;margin-top:1.6em}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.narrow{max-width:760px}
+
+/* nav */
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+nav .wrap{display:flex;align-items:center;gap:22px;height:56px}
+nav .brand{font-family:var(--serif);font-weight:800;font-size:1.1rem;color:var(--ink);text-decoration:none;margin-right:auto}
+nav .brand span{background:var(--lime);color:#1d1f1a;padding:0 .25em;border-radius:3px}
+nav a.l{color:var(--ink-2);text-decoration:none;font-size:.92rem;font-weight:500}
+nav a.l:hover{color:var(--ink)}
+@media (max-width:760px){nav a.l:not(.gh){display:none}}
+
+/* hero */
+header.hero{padding:88px 0 56px;border-bottom:1px solid var(--rule)}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.hero h1{font-size:clamp(2.7rem,7.5vw,5.6rem);font-weight:800;letter-spacing:-.025em;max-width:13ch;margin:.25em 0 .35em}
+.hero h1 em{font-style:italic;padding:0 .12em 0 .02em;font-weight:400;background:linear-gradient(transparent 62%,var(--lime) 62%,var(--lime) 92%,transparent 92%)}
+.hero p.lede{font-size:1.25rem;color:var(--ink-2);max-width:60ch;margin:0 0 32px}
+.cta{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:.5em;padding:.78em 1.2em;border-radius:8px;font-weight:600;text-decoration:none;font-size:.97rem;border:1.5px solid var(--ink);color:var(--ink);background:transparent;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:4px 4px 0 var(--ink)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.primary:hover{box-shadow:4px 4px 0 var(--lime)}
+.btn small{font-weight:400;opacity:.7;font-size:.8em}
+.conveyor{margin-top:56px;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:14px;font-family:var(--mono);font-size:.85rem}
+.conveyor .box{border:1.5px solid var(--ink);background:var(--card);padding:14px 16px;border-radius:8px;box-shadow:var(--shadow)}
+.conveyor .box b{display:block;font-family:var(--serif);font-size:1.15rem;margin-bottom:2px}
+.conveyor .box span{color:var(--muted)}
+.conveyor .box.mid{background:var(--lime);color:#1d1f1a;border-color:#1d1f1a}
+.conveyor .box.mid span{color:#3b4a1a}
+.arrow{width:46px;height:2px;background:var(--ink);position:relative}
+.arrow::after{content:"";position:absolute;right:0;top:-5px;border:6px solid transparent;border-left:9px solid var(--ink);border-right:0}
+.arrow i{position:absolute;top:-2px;width:10px;height:6px;border-radius:3px;background:var(--lime);animation:flow 1.6s linear infinite}
+@keyframes flow{0%{left:0;opacity:0}15%{opacity:1}85%{opacity:1}100%{left:30px;opacity:0}}
+@media (max-width:760px){.conveyor{grid-template-columns:1fr}.arrow{transform:rotate(90deg);margin:6px auto}}
+.reveal{opacity:0;transform:translateY(14px);animation:rise .7s cubic-bezier(.2,.7,.2,1) forwards}
+.d1{animation-delay:.05s}.d2{animation-delay:.15s}.d3{animation-delay:.25s}.d4{animation-delay:.4s}
+@keyframes rise{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.reveal{animation:none;opacity:1;transform:none}.arrow i{animation:none}}
+
+section{padding:88px 0;border-bottom:1px solid var(--rule)}
+section .intro{color:var(--ink-2);font-size:1.1rem;max-width:64ch}
+
+.aibox{max-width:68ch;font-size:.95rem;background:var(--card);border:1px dashed var(--ink-2);border-radius:8px;padding:12px 16px;color:var(--ink-2);margin:0 0 28px}
+.aibox b{color:var(--ink)}
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden;background:var(--card);margin-top:36px}
+.facts div{padding:22px;border-right:1px solid var(--rule)}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font-family:var(--serif);font-size:1.25rem;margin-bottom:4px}
+.facts span{color:var(--ink-2);font-size:.93rem}
+@media (max-width:860px){.facts{grid-template-columns:1fr 1fr}.facts div:nth-child(2){border-right:0}.facts div:nth-child(-n+2){border-bottom:1px solid var(--rule)}}
+@media (max-width:520px){.facts{grid-template-columns:1fr}.facts div{border-right:0;border-bottom:1px solid var(--rule)}}
+
+/* steps */
+.step{display:grid;grid-template-columns:120px 1fr;gap:28px;padding:48px 0;border-top:1px dashed var(--rule)}
+.step:first-of-type{border-top:0}
+.num{font-family:var(--serif);font-weight:800;font-size:5.2rem;line-height:.85;color:transparent;-webkit-text-stroke:1.5px var(--ink);position:sticky;top:84px;align-self:start}
+.step.done .num{color:var(--lime);-webkit-text-stroke:1.5px var(--ink)}
+.step h3{margin-top:0;font-size:1.8rem}
+.step .body{min-width:0}
+.step .body>p{max-width:68ch}
+@media (max-width:760px){.step{grid-template-columns:1fr;gap:6px}.num{position:static;font-size:3.4rem}}
+figure{margin:24px 0 8px}
+.shot{display:block;width:100%;border:1.5px solid var(--ink);border-radius:10px;box-shadow:var(--shadow);background:#fff;cursor:zoom-in;transition:transform .2s}
+.shot:hover{transform:scale(1.005)}
+figcaption{font-size:.88rem;color:var(--muted);margin-top:10px;font-family:var(--mono)}
+.callouts{list-style:none;padding:0;margin:18px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.callouts li{background:var(--card);border:1px solid var(--rule);border-left:4px solid var(--lime);padding:12px 14px;border-radius:6px;font-size:.94rem}
+.callouts li b{display:block;font-weight:600}
+.note{background:var(--paper-2);border:1px solid var(--rule);border-radius:8px;padding:14px 18px;font-size:.95rem;margin:18px 0;max-width:72ch}
+.note b{font-weight:600}
+ol.flat{padding-left:1.2em;max-width:68ch}
+ol.flat li{margin:.3em 0}
+.mock{border:1.5px solid var(--ink);border-radius:10px;background:var(--card);box-shadow:var(--shadow);overflow:hidden;max-width:640px;font-size:.92rem}
+.mock .bar{background:var(--paper-2);border-bottom:1px solid var(--rule);padding:8px 12px;font-family:var(--mono);font-size:.78rem;color:var(--muted);display:flex;gap:6px;align-items:center}
+.mock .bar i{width:10px;height:10px;border-radius:50%;background:var(--rule);display:inline-block}
+.mock .in{padding:16px 18px}
+.mock .menu{border:1px solid var(--rule);border-radius:6px;display:inline-block;min-width:220px;background:var(--paper)}
+.mock .menu div{padding:7px 12px;border-bottom:1px solid var(--rule)}
+.mock .menu div:last-child{border:0}
+.mock .menu .hi{background:var(--lime);color:#1d1f1a;font-weight:600}
+.mock .tag{font-family:var(--mono);font-size:.72rem;color:var(--muted);float:right}
+
+/* files listing */
+.tree{font-family:var(--mono);font-size:.86rem;background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:18px 20px;overflow-x:auto;line-height:1.7}
+.tree .n{color:#b7e04a}.tree .c{color:#8e9184}
+
+/* code */
+pre{background:var(--code-bg);color:var(--code-ink);padding:18px 20px;border-radius:10px;overflow-x:auto;line-height:1.55;margin:0}
+pre .k{color:#8fb7e8}.pre .s{color:#e8c46c}pre .s{color:#e8c46c}pre .c{color:#7d8274}pre .g{color:#b7e04a}pre .w{color:#f0a34a}pre .r{color:#ff8a98}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.ba>div{min-width:0}
+.ba .lbl{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.ba .lbl::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--blue)}
+.ba>div:last-child .lbl::before{background:var(--lime)}
+@media (max-width:860px){.ba{grid-template-columns:1fr}}
+
+/* tabs */
+.tabs{margin-top:28px}
+.tabs [role=tablist]{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1.5px solid var(--ink)}
+.tabs button{font:600 .9rem var(--sans);background:transparent;border:1.5px solid transparent;border-bottom:0;padding:9px 14px;border-radius:8px 8px 0 0;cursor:pointer;color:var(--ink-2);margin-bottom:-1.5px}
+.tabs button[aria-selected=true]{background:var(--card);border-color:var(--ink);color:var(--ink)}
+.tabs [role=tabpanel]{background:var(--card);border:1.5px solid var(--ink);border-top:0;border-radius:0 0 10px 10px;padding:22px}
+.tabs [role=tabpanel] p{margin-top:0;max-width:72ch}
+
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px;counter-reset:p}
+.stage{background:var(--card);border:1.5px solid var(--ink);border-radius:12px;padding:22px;position:relative;box-shadow:var(--shadow)}
+.stage::before{counter-increment:p;content:"0" counter(p);font-family:var(--mono);font-size:.75rem;color:var(--muted);position:absolute;top:14px;right:16px}
+.stage h4{font-family:var(--serif);font-size:1.35rem;margin:0 0 4px}
+.stage .file{font-family:var(--mono);font-size:.78rem;color:var(--lime-ink);margin-bottom:10px}
+.stage ul{padding-left:1.1em;margin:0;font-size:.94rem;color:var(--ink-2)}
+@media (max-width:860px){.pipe{grid-template-columns:1fr}}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;font-size:.93rem;background:var(--card);border:1.5px solid var(--ink);border-radius:10px;overflow:hidden;margin-top:16px}
+.tbl th,.tbl td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+.tbl th{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--paper-2)}
+.tbl tr:last-child td{border-bottom:0}
+.tbl code{white-space:nowrap}
+.tbl .code{font-family:var(--mono);font-weight:600;color:var(--lime-ink);text-align:center;width:60px}
+.scroll{overflow-x:auto}
+.filter{margin-top:20px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filter input{font:inherit;font-size:.95rem;padding:.5em .8em;border:1.5px solid var(--ink);border-radius:8px;background:var(--card);color:var(--ink);min-width:260px}
+.pill{display:inline-block;font-family:var(--mono);font-size:.72rem;padding:.1em .5em;border-radius:99px;border:1px solid currentColor}
+.pill.ok{color:var(--lime-ink)}.pill.warn{color:var(--warn)}.pill.fail{color:var(--fail)}.pill.info{color:var(--blue)}
+
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:36px}
+@media (max-width:860px){.cols{grid-template-columns:1fr}}
+.risk{font-family:var(--mono);font-size:.9rem;background:var(--card);border:1.5px solid var(--ink);border-radius:10px;padding:18px 20px}
+.risk div{display:flex;justify-content:space-between;border-bottom:1px dotted var(--rule);padding:4px 0}
+.risk div:last-child{border:0;font-weight:600}
+.risk b{color:var(--lime-ink)}
+details{border:1px solid var(--rule);border-radius:8px;background:var(--card);padding:0 18px;margin:10px 0}
+details summary{cursor:pointer;padding:14px 0;font-weight:600;list-style:none}
+details summary::before{content:"+";font-family:var(--mono);display:inline-block;width:1.4em;color:var(--lime-ink)}
+details[open] summary::before{content:"–"}
+details>div{padding:0 0 16px 1.4em;color:var(--ink-2)}
+.check{list-style:none;padding:0}
+.check li{padding:6px 0 6px 30px;position:relative}
+.check li::before{content:"";position:absolute;left:0;top:10px;width:16px;height:16px;border:1.5px solid var(--ink);border-radius:4px}
+footer{padding:48px 0 64px;color:var(--muted);font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between}
+
+dialog{border:0;padding:0;background:transparent;max-width:96vw;max-height:94vh}
+dialog::backdrop{background:rgba(15,16,12,.82)}
+dialog img{max-width:96vw;max-height:90vh;display:block;border-radius:8px}
+dialog p{color:#ddd;font-family:var(--mono);font-size:.85rem;text-align:center}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top">Qualtrics<span>To</span>Lime</a>
+  <a class="l" href="#demo">Demo</a>
+  <a class="l" href="#how">How it works</a>
+  <a class="l" href="#mapping">Mappings</a>
+  <a class="l" href="#limits">Limitations</a>
+  <a class="l" href="#disclaimer">Disclaimer</a>
+  <a class="l gh" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration">GitHub ↗</a>
+</div></nav>
+
+<header class="hero" id="top"><div class="wrap">
+  <div class="eyebrow reveal d1">A free helper tool · not a product · no account, no ads</div>
+  <h1 class="reveal d2" style="max-width:none">Qualtrics <em>to</em> LimeSurvey</h1>
+  <p class="lede reveal d3">A small open-source tool that converts a Qualtrics survey file (<code>.qsf</code>) into a LimeSurvey structure file (<code>.lss</code>). It was made to help researchers who need to move a survey and would rather not rebuild it by hand. It takes care of the repetitive part (questions, blocks, answer options, display logic, piped text) and lists what it couldn't convert. You will still need to check the result yourself.</p>
+  <p class="aibox reveal d3"><b>About this page:</b> this website, its text and the converter's code were created by AI (Claude, by Anthropic), based on an idea and guidance from Konrad Schweizer. The screenshots come from the real program; the demo survey is made up. Please read it with that in mind and report anything that looks wrong on <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/issues">GitHub</a>.</p>
+  <div class="cta reveal d4">
+    <a class="btn" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-Windows.zip">⬇ Windows</a>
+    <a class="btn" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-macOS-AppleSilicon.zip">⬇ Mac (Apple Silicon)</a>
+    <a class="btn" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-macOS-Intel.zip">⬇ Mac (Intel)</a>
+    <a class="btn" href="#demo">How to use it ↓</a>
+  </div>
+  <div class="conveyor reveal d4" aria-hidden="true">
+    <div class="box"><b>survey.qsf</b><span>Qualtrics export · JSON</span></div>
+    <div class="arrow"><i></i></div>
+    <div class="box mid"><b>QualtricsToLime</b><span>inspect → convert → verify</span></div>
+    <div class="arrow"><i></i></div>
+    <div class="box"><b>survey.lss</b><span>LimeSurvey import · XML</span></div>
+  </div>
+</div></header>
+
+<section id="why"><div class="wrap">
+  <h2>Why this exists</h2>
+  <p class="intro">Moving a study from Qualtrics to LimeSurvey usually means re-typing every question, answer option and logic rule, and every re-typed condition is a chance for a small mistake. This tool was written to save that work. It gives you a rough first version of the survey to check and fix, not a finished one. It is shared for free in the hope that it's useful to others. There is nothing to buy and no support contract.</p>
+  <div class="facts">
+    <div><b>No installation</b><span>Unzip and double-click. Python is not required.</span></div>
+    <div><b>Works offline</b><span>Files are processed on your own computer. The program contains no network code.</span></div>
+    <div><b>Basic checks</b><span>Ten automatic count comparisons between input and output. They help, but they are not a guarantee.</span></div>
+    <div><b>Has gaps</b><span>Some Qualtrics features can't be converted. These are listed in the report and <a href="#limits">below</a>.</span></div>
+  </div>
+</div></section>
+
+<section id="demo"><div class="wrap">
+  <div class="eyebrow">Demo · step by step</div>
+  <h2>How to use it, step by step</h2>
+  <p class="intro">This walkthrough converts a small demo survey, <em>Coffee Habits</em>, using the window version of the converter. The demo survey was written to use almost every feature: four blocks plus a trash block, a slider, a matrix, a ranking question, display logic, piped text, custom JavaScript, embedded data and a timing question. <a href="demo/coffee_habits_demo.qsf" download>Download the demo .qsf</a> to follow along, or look at <a href="demo/coffee_habits_demo.lss" download>the converted .lss</a>.</p>
+
+  <div class="step">
+    <div class="num">1</div>
+    <div class="body">
+      <h3>Export your survey from Qualtrics</h3>
+      <p>In Qualtrics, open the survey and export its structure as a <code>.qsf</code> file. The file holds the questions, logic and settings. It contains <strong>no response data</strong>, so your participants' answers stay in Qualtrics.</p>
+      <div class="mock" role="img" aria-label="Diagram of the Qualtrics export menu">
+        <div class="bar"><i></i><i></i><i></i>&nbsp; Qualtrics · Survey editor (illustration)</div>
+        <div class="in">
+          <div class="menu">
+            <div>Survey options</div>
+            <div>Import survey</div>
+            <div class="hi">Export survey <span class="tag">→ .qsf</span></div>
+            <div>Print survey</div>
+          </div>
+        </div>
+      </div>
+      <ol class="flat">
+        <li>Log in to Qualtrics and open the survey.</li>
+        <li>Open the <strong>Tools</strong> / <strong>three-dot (…)</strong> menu next to the survey name.</li>
+        <li>Choose <strong>Export survey</strong> → <strong>QSF</strong>, then click <strong>Export</strong>.</li>
+        <li>A file such as <code>Coffee_Habits.qsf</code> is downloaded. You can export several surveys and convert them all in one go.</li>
+      </ol>
+      <p class="note"><b>Note:</b> the menu above is a simplified illustration. Qualtrics moves its menus around between versions, so look for “Export survey” under <em>Tools</em> or the survey's <em>…</em> menu.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">2</div>
+    <div class="body">
+      <h3>Start QualtricsToLime</h3>
+      <p>Download the zip for your computer from the buttons at the top, unzip it anywhere and start <code>QualtricsToLimeGUI</code>. It opens one window. There is a drop zone at the top, a file list on the left, a details pane on the right and the controls along the bottom.</p>
+      <figure><img class="shot" src="img/01-start.png" alt="QualtricsToLime window right after starting: empty file list and details pane" width="1202" height="792" loading="lazy"><figcaption>Fig. 1. The empty window when the program starts.</figcaption></figure>
+      <ul class="callouts">
+        <li><b>Windows</b>Double-click <code>QualtricsToLimeGUI.exe</code>. If SmartScreen warns you, click <em>More info → Run anyway</em> (the exe isn't code-signed).</li>
+        <li><b>macOS</b>The first time only, <em>right-click</em> <code>QualtricsToLimeGUI.app</code> → <em>Open</em> → <em>Open</em>. This clears Apple's “unidentified developer” warning.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">3</div>
+    <div class="body">
+      <h3>Drop in your .qsf files</h3>
+      <p>Drag one or more <code>.qsf</code> files, or a whole folder, onto the window. The drop zone lights up while you drag. If you drop a folder, it is searched recursively and every <code>.qsf</code> inside is added. Anything that isn't a <code>.qsf</code> is ignored. If you'd rather not drag, click the drop zone or use <strong>Add files…</strong> / <strong>Add folder…</strong>.</p>
+      <figure><img class="shot" src="img/02-drag-over.png" alt="The drop zone highlighted in blue while a file is dragged over the window" width="1202" height="792" loading="lazy"><figcaption>Fig. 2. The drop zone highlights while a file is dragged over it.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">4</div>
+    <div class="body">
+      <h3>Check the queue and choose where the output goes</h3>
+      <p>Each file appears in the list with the status <strong>Ready</strong>. By default each <code>.lss</code> is written <em>next to its .qsf</em>. Click <strong>Change…</strong> to send everything to one folder instead. Select a file and press <kbd>Delete</kbd> (or <strong>Remove</strong>) to take it off the list, or press <strong>Clear</strong> to start over.</p>
+      <figure><img class="shot" src="img/03-added.png" alt="The demo file listed with status Ready" width="1202" height="792" loading="lazy"><figcaption>Fig. 3. The demo survey is queued and ready to convert.</figcaption></figure>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">5</div>
+    <div class="body">
+      <h3>Press Convert and read the result</h3>
+      <p>Press <strong>Convert</strong>. Every file is <em>inspected</em>, <em>converted</em> and <em>verified</em> in the background, so the window stays responsive even for large batches. Each row then gets a coloured verdict: green <strong>OK</strong>, amber <strong>OK with warnings</strong> or red <strong>failed</strong>. Click a row to see its details.</p>
+      <figure><img class="shot" src="img/04-results.png" alt="Results after conversion: status OK with 5 warnings, input and output summaries" width="1202" height="792" loading="lazy"><figcaption>Fig. 4. The details pane shows the input analysis and the output summary.</figcaption></figure>
+      <p>The details pane has three parts:</p>
+      <ul class="callouts">
+        <li><b>Input (Qualtrics)</b>Survey name, language, 13 questions in 5 blocks, a breakdown by question type, and the detected features: display logic, piped text, JavaScript, embedded data. It also shows a <a href="#risk">migration risk score</a>.</li>
+        <li><b>Output (LimeSurvey)</b>What was written: 4 groups, 12 questions, 7 subquestions (array and ranking rows) and 22 answer options, broken down by LimeSurvey question type.</li>
+        <li><b>Verification</b>Ten checks that compare input and output (scroll down, Fig. 5).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">6</div>
+    <div class="body">
+      <h3>Understand the verification checks</h3>
+      <p>The demo ends as <strong>“OK with 5 warning(s)”</strong>, and every warning is expected for this survey. They show the kind of thing the report tells you:</p>
+      <figure><img class="shot" src="img/05-results-bottom.png" alt="Verification section with green checks, amber warnings and one info line" width="1202" height="792" loading="lazy"><figcaption>Fig. 5. Verification: ✓ passed, ! warning, i information.</figcaption></figure>
+      <table class="tbl">
+        <tr><th>Result</th><th>What it says</th><th>Why</th></tr>
+        <tr><td><span class="pill warn">!</span></td><td>13 questions in QSF, 12 in LSS</td><td>The deleted question in the <em>Trash</em> block is skipped on purpose.</td></tr>
+        <tr><td><span class="pill warn">!</span></td><td>5 blocks, 4 groups</td><td>Same reason: the Trash block doesn't become a group.</td></tr>
+        <tr><td><span class="pill ok">✓</span></td><td>All 10 question types have mappings</td><td>Every type has a LimeSurvey counterpart.</td></tr>
+        <tr><td><span class="pill warn">!</span></td><td>Choices: 25 in QSF, 29 in LSS</td><td>The matrix's 5 scale points become answer options on top of its 3 statement rows, and the slider's single label is dropped. The net difference is +4.</td></tr>
+        <tr><td><span class="pill ok">✓</span></td><td>Mandatory questions match: 2</td><td>“Force response” was carried over.</td></tr>
+        <tr><td><span class="pill ok">✓</span></td><td>Display logic/relevance match: 3</td><td>All three conditions became relevance equations.</td></tr>
+        <tr><td><span class="pill warn">!</span></td><td>Problem type: Timing</td><td>LimeSurvey has no timing question, so it becomes a display-only placeholder.</td></tr>
+        <tr><td><span class="pill warn">!</span></td><td>1 question uses custom JavaScript</td><td>Qualtrics JavaScript isn't transferred. Rebuild it in LimeSurvey if you need it.</td></tr>
+        <tr><td><span class="pill info">i</span></td><td>2 embedded data fields: source, participant_id</td><td>Set these up as URL parameters in LimeSurvey.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="num">7</div>
+    <div class="body">
+      <h3>Collect the files and import into LimeSurvey</h3>
+      <p>Click <strong>Open</strong> to show the output folder. It contains the converted survey plus a timestamped plain-text report with everything you saw on screen. Old reports are never overwritten, so keep one next to the survey while you review it.</p>
+      <div class="tree">Surveys/
+├── coffee_habits_demo.qsf               <span class="c"># your Qualtrics export</span>
+├── <span class="n">coffee_habits_demo.lss</span>               <span class="c"># → import this into LimeSurvey</span>
+└── <span class="n">conversion_report_20261014_103241.txt</span><span class="c"># input · output · verification</span></div>
+      <details><summary>Show an excerpt of the conversion report</summary><div><pre>  VERIFICATION
+  ----------------
+    <span class="w">[!!]</span>   Questions: 13 in QSF, 12 in LSS (1 fewer) — likely Trash block …
+    <span class="w">[!!]</span>   Groups: 5 blocks in QSF, 4 groups in LSS (1 fewer — … skipped)
+    <span class="g">[OK]</span>   All 10 question type(s) have mappings
+    <span class="w">[!!]</span>   Choices: 25 in QSF, 29 in LSS (22 answers + 7 subquestions)
+    <span class="g">[OK]</span>   Mandatory questions match: 2
+    <span class="g">[OK]</span>   Display logic/relevance match: 3
+    <span class="g">[OK]</span>   No conversion warnings
+    <span class="w">[!!]</span>   Problem question types present: Timing(1)
+    <span class="w">[!!]</span>   1 question(s) use custom JavaScript — needs manual review
+    <span class="k">[i]</span>    2 embedded data field(s) detected: source, participant_id
+
+    Verdict                                  4 passed | 5 warning(s) | 1 info</pre></div></details>
+      <p>Then, in LimeSurvey:</p>
+      <ol class="flat">
+        <li>Open the LimeSurvey admin panel and click <strong>Create survey</strong>.</li>
+        <li>Switch to the <strong>Import</strong> tab, choose the <code>.lss</code> file and click <strong>Import survey</strong>.</li>
+        <li>LimeSurvey shows an import summary (groups, questions, answers). Compare it with the “Output” numbers in the report.</li>
+      </ol>
+      <h3 style="font-size:1.2rem">Review checklist before you activate</h3>
+      <ul class="check">
+        <li>Click through every question group and check that the questions look right.</li>
+        <li>Check that answer options and subquestions are complete and in the right order.</li>
+        <li>Preview the survey and trigger each display-logic condition.</li>
+        <li>Search the survey for <code>FIXME</code>. These mark expressions that need a manual fix.</li>
+        <li>Add embedded data fields as URL parameters (<em>Survey settings → Panel integration</em>).</li>
+        <li>Rebuild any custom JavaScript and timing behaviour you still need.</li>
+        <li>Run the whole survey once from start to finish, then activate it.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="note"><b>Prefer no clicking?</b> The download also includes <code>QualtricsToLime</code>, a folder-based version. Put <code>.qsf</code> files in <code>input/</code>, double-click it, and collect the results from <code>output/</code>. It runs the same analysis, conversion, verification and report.</p>
+</div></section>
+
+<section id="how"><div class="wrap">
+  <div class="eyebrow">How it works</div>
+  <h2>Three stages: inspect, convert, verify</h2>
+  <p class="intro">A <code>.qsf</code> file is JSON: a <code>SurveyEntry</code> with metadata and a flat list of <code>SurveyElements</code>. Each element is one piece of the survey: <code>BL</code> blocks, <code>FL</code> survey flow, <code>SQ</code> questions, <code>SO</code> options. A <code>.lss</code> file is XML that mirrors LimeSurvey's database tables (<code>surveys</code>, <code>groups</code>, <code>questions</code>, <code>subquestions</code>, <code>answers</code>, <code>question_attributes</code>). Converting means turning one into the other.</p>
+
+  <div class="pipe">
+    <div class="stage"><h4>Inspect</h4><div class="file">qsf_inspector.py</div>
+      <ul><li>Reads the QSF and counts questions, blocks and types</li><li>Finds display logic, validation, piped text, JavaScript, randomisation, branches and embedded data</li><li>Flags problem and unmapped types</li><li>Computes a migration risk score</li></ul></div>
+    <div class="stage"><h4>Convert</h4><div class="file">qsf_to_lss.py</div>
+      <ul><li>Orders blocks using the survey flow</li><li>Blocks → groups, questions → typed LimeSurvey questions</li><li>Choices → answers or subquestions</li><li>Logic → relevance, piped text → expressions</li><li>Writes the LSS XML</li></ul></div>
+    <div class="stage"><h4>Verify</h4><div class="file">app.py · gui.py</div>
+      <ul><li>Parses the <code>.lss</code> it just wrote</li><li>Runs 10 checks comparing input and output</li><li>Writes a timestamped report and shows it on screen</li></ul></div>
+  </div>
+
+  <h3 id="risk">Stage 1: inspection and the risk score</h3>
+  <div class="cols">
+    <div>
+      <p>Before anything is converted, the inspector reads every question and survey element and builds a profile of the survey. This is what appears under <em>Input (Qualtrics)</em>. From that profile it computes a simple <strong>migration risk score</strong>. It's a rough guide to how much manual work to expect, and it's most useful for sorting a batch of surveys so you tackle the hard ones first.</p>
+      <p>A “problem type” is a Qualtrics question with no clean LimeSurvey equivalent: heat maps, hot spots, timing, captcha, file upload, meta info and similar. A type is “unmapped” if it isn't in the inspector's list of known-safe mappings.</p>
+    </div>
+    <div class="risk" aria-label="Risk score formula">
+      <div><span>problem question types</span><span>× 5</span></div>
+      <div><span>questions with JavaScript</span><span>× 4</span></div>
+      <div><span>unmapped question types</span><span>× 3</span></div>
+      <div><span>flow branches</span><span>× 2</span></div>
+      <div><span>flow randomisers</span><span>× 2</span></div>
+      <div><span>randomised blocks</span><span>× 1</span></div>
+      <div><span>questions with display logic</span><span>× 1</span></div>
+      <div><span>piped-text occurrences</span><span>× 1</span></div>
+      <div><span>Demo survey: 5 + 4 + 3 + 3 + 3</span><b>= 18</b></div>
+    </div>
+  </div>
+
+  <h3>Stage 2: conversion, piece by piece</h3>
+  <p class="intro" style="font-size:1rem">The converter builds the LimeSurvey tables one row at a time. Pick a topic to see what happens to it. The “before” and “after” snippets are taken from the demo survey's real input and output.</p>
+
+  <div class="tabs" data-tabs>
+    <div role="tablist" aria-label="Conversion topics">
+      <button role="tab" aria-selected="true" aria-controls="t1" id="b1">Structure &amp; flow</button>
+      <button role="tab" aria-selected="false" aria-controls="t2" id="b2" tabindex="-1">Question types</button>
+      <button role="tab" aria-selected="false" aria-controls="t3" id="b3" tabindex="-1">Choices &amp; answers</button>
+      <button role="tab" aria-selected="false" aria-controls="t4" id="b4" tabindex="-1">Display logic</button>
+      <button role="tab" aria-selected="false" aria-controls="t5" id="b5" tabindex="-1">Piped text</button>
+      <button role="tab" aria-selected="false" aria-controls="t6" id="b6" tabindex="-1">Mandatory &amp; sliders</button>
+      <button role="tab" aria-selected="false" aria-controls="t7" id="b7" tabindex="-1">Writing the XML</button>
+    </div>
+
+    <div role="tabpanel" id="t1" aria-labelledby="b1">
+      <p>Qualtrics stores blocks in one <code>BL</code> element and their order in the <code>FL</code> (survey flow) element. The converter walks the flow tree from top to bottom, including blocks nested inside branches and randomisers, and records each block the first time it appears. Blocks that exist but never appear in the flow are added at the end, so nothing is lost.</p>
+      <p>Each remaining block becomes a <strong>question group</strong> in that order. The block's description becomes the group name. Blocks named <em>Trash</em> or <em>Unused</em> and empty blocks are skipped. Groups, questions and the survey get new sequential IDs (<code>sid</code> 100000, then <code>gid</code> 1, 2, 3… and <code>qid</code> 1, 2, 3…). Qualtrics' <code>DataExportTag</code> becomes the LimeSurvey question code, so your variable names stay the same.</p>
+      <div class="ba">
+        <div><div class="lbl">Qualtrics survey flow</div><pre><span class="k">"Flow"</span>: [
+  { <span class="k">"Type"</span>: <span class="s">"EmbeddedData"</span>, … },
+  { <span class="k">"Type"</span>: <span class="s">"Block"</span>,    <span class="k">"ID"</span>: <span class="s">"BL_welcome"</span> },
+  { <span class="k">"Type"</span>: <span class="s">"Standard"</span>, <span class="k">"ID"</span>: <span class="s">"BL_about"</span> },
+  { <span class="k">"Type"</span>: <span class="s">"Standard"</span>, <span class="k">"ID"</span>: <span class="s">"BL_coffee"</span> },
+  { <span class="k">"Type"</span>: <span class="s">"Standard"</span>, <span class="k">"ID"</span>: <span class="s">"BL_feedback"</span> }
+]
+<span class="c">// BL_trash ("Trash / Unused Questions") is skipped</span></pre></div>
+        <div><div class="lbl">LimeSurvey groups</div><pre>gid 1  <span class="g">Welcome</span>         3 questions
+gid 2  <span class="g">About you</span>       3 questions
+gid 3  <span class="g">Coffee habits</span>   5 questions
+gid 4  <span class="g">Feedback</span>        1 question
+<span class="c">                       ─────────────</span>
+                       12 questions</pre></div>
+      </div>
+    </div>
+
+    <div role="tabpanel" id="t2" aria-labelledby="b2" hidden>
+      <p>Every Qualtrics question has a <code>QuestionType</code> and a <code>Selector</code>, the visual variant. The pair is looked up in a mapping table to get a one-letter LimeSurvey type code. If the exact pair isn't there, the type is tried on its own (so <code>DB/GRB</code> still becomes Text Display). Anything still unknown becomes <code>T</code> (Long free text) with a warning, so the question text is never lost. The full table is <a href="#mapping">below</a>.</p>
+      <div class="ba">
+        <div><div class="lbl">Qualtrics question</div><pre>{ <span class="k">"QuestionID"</span>:    <span class="s">"QID7"</span>,
+  <span class="k">"DataExportTag"</span>: <span class="s">"drinks"</span>,
+  <span class="k">"QuestionType"</span>:  <span class="s">"MC"</span>,
+  <span class="k">"Selector"</span>:      <span class="s">"MAVR"</span>,   <span class="c">// multi-answer, vertical</span>
+  <span class="k">"QuestionText"</span>:  <span class="s">"Which coffee drinks do you order? …"</span> }</pre></div>
+        <div><div class="lbl">LimeSurvey question row</div><pre>&lt;qid&gt;8&lt;/qid&gt;
+&lt;gid&gt;3&lt;/gid&gt;
+&lt;type&gt;<span class="g">M</span>&lt;/type&gt;             <span class="c">&lt;!-- Multiple choice --&gt;</span>
+&lt;title&gt;<span class="g">drinks</span>&lt;/title&gt;
+&lt;question&gt;Which coffee drinks do you order? …&lt;/question&gt;</pre></div>
+      </div>
+    </div>
+
+    <div role="tabpanel" id="t3" aria-labelledby="b3" hidden>
+      <p>Qualtrics stores options as <code>Choices</code>, plus <code>Answers</code> for matrix scale points, each with a <code>ChoiceOrder</code>. LimeSurvey splits options into two kinds, so the converter decides by target type:</p>
+      <ul>
+        <li><strong>Answer options</strong> for lists, dropdowns and multiple choice (<code>L ! M</code>). Each choice becomes an answer coded <code>A1</code>, <code>A2</code>, … in the original order.</li>
+        <li><strong>Subquestions</strong> for arrays, ranking and multiple numerical (<code>F ; 1 K R</code>). Each choice becomes a row coded <code>SQ001</code>, <code>SQ002</code>, … For Likert and bipolar matrices the Qualtrics <code>Answers</code> (scale points) also become answer options, i.e. the array's columns.</li>
+        <li>A single-choice question with a text-entry choice (“Other: ____”) gets LimeSurvey's built-in <em>Other</em> option switched on.</li>
+      </ul>
+      <div class="ba">
+        <div><div class="lbl">Qualtrics Matrix / Likert</div><pre><span class="k">"Choices"</span>: {            <span class="c">// statements (rows)</span>
+  <span class="s">"1"</span>: <span class="s">"Coffee helps me concentrate"</span>,
+  <span class="s">"2"</span>: <span class="s">"I drink coffee mostly out of habit"</span>,
+  <span class="s">"3"</span>: <span class="s">"I would like to drink less coffee"</span> },
+<span class="k">"Answers"</span>: {            <span class="c">// scale (columns)</span>
+  <span class="s">"1"</span>: <span class="s">"Strongly disagree"</span>, … <span class="s">"5"</span>: <span class="s">"Strongly agree"</span> }</pre></div>
+        <div><div class="lbl">LimeSurvey array (F)</div><pre>question  <span class="g">attitudes</span>   type F
+├─ subquestion <span class="g">SQ001</span>  Coffee helps me concentrate
+├─ subquestion <span class="g">SQ002</span>  I drink coffee mostly out of habit
+├─ subquestion <span class="g">SQ003</span>  I would like to drink less coffee
+└─ answers <span class="g">A1</span>…<span class="g">A5</span>      Strongly disagree … Strongly agree</pre></div>
+      </div>
+    </div>
+
+    <div role="tabpanel" id="t4" aria-labelledby="b4" hidden>
+      <p>Qualtrics display logic is a nested tree of <code>If</code>/<code>Expression</code> nodes. The converter walks the tree and turns each condition into an ExpressionManager term, using the referenced question's export tag. It supports Selected and NotSelected, EqualTo and NotEqualTo, greater/less than (or equal), IsEmpty/IsNotEmpty, IsDisplayed/IsNotDisplayed, and Contains/Matches (as <code>regexMatch</code>). The terms are joined with <code>&amp;&amp;</code> and written to the question's <code>relevance</code> field. A question without logic gets relevance <code>1</code> (always shown).</p>
+      <div class="ba">
+        <div><div class="lbl">Qualtrics DisplayLogic</div><pre><span class="k">"DisplayLogic"</span>: { <span class="s">"0"</span>: { <span class="s">"0"</span>: {
+  <span class="k">"Type"</span>:         <span class="s">"Expression"</span>,
+  <span class="k">"LeftOperand"</span>:  <span class="s">"q://QID6/ChoiceNumericEntryValue/1"</span>,
+  <span class="k">"Operator"</span>:     <span class="s">"GreaterThan"</span>,
+  <span class="k">"RightOperand"</span>: <span class="s">"0"</span>
+}, <span class="k">"Type"</span>: <span class="s">"If"</span> }, <span class="k">"Type"</span>: <span class="s">"BooleanExpression"</span> }</pre></div>
+        <div><div class="lbl">LimeSurvey relevance</div><pre>&lt;relevance&gt;<span class="g">(cups.NAOK &gt; 0)</span>&lt;/relevance&gt;
+
+<span class="c">QID6 → export tag "cups"</span>
+<span class="c">.NAOK = read the value even if that question</span>
+<span class="c">        was hidden or left unanswered</span></pre></div>
+      </div>
+      <p class="note" style="margin-bottom:0"><b>Where you'll need to step in:</b> conditions are always joined with AND. Logic that relies on OR, on nested groups, or on an operator the converter doesn't recognise gets a <code>/* FIXME … */</code> marker instead of a guess. Search the survey for <code>FIXME</code> after importing, and test every condition in preview.</p>
+    </div>
+
+    <div role="tabpanel" id="t5" aria-labelledby="b5" hidden>
+      <p>Piped text inserts earlier answers or variables into question text. The converter rewrites it in question text, answer labels and subquestion labels:</p>
+      <table class="tbl">
+        <tr><th>Qualtrics</th><th>LimeSurvey</th><th>Meaning</th></tr>
+        <tr><td><code>${e://Field/source}</code></td><td><code>{source}</code></td><td>Embedded-data field</td></tr>
+        <tr><td><code>${q://QID3/ChoiceTextEntryValue}</code></td><td><code>{name.NAOK}</code></td><td>The answer to a question</td></tr>
+        <tr><td><code>${q://QID3/QuestionText}</code></td><td><code>{name.question}</code></td><td>The text of a question</td></tr>
+        <tr><td><code>${lm://Field/1}</code></td><td><code>{FIXME_LOOP_REF}</code></td><td>Loop &amp; merge field, needs a manual fix</td></tr>
+      </table>
+      <div class="ba">
+        <div><div class="lbl">Qualtrics</div><pre>Hi <span class="s">${q://QID3/ChoiceTextEntryValue}</span>, how many
+cups of coffee do you drink on a typical day?</pre></div>
+        <div><div class="lbl">LimeSurvey</div><pre>Hi <span class="g">{name.NAOK}</span>, how many
+cups of coffee do you drink on a typical day?</pre></div>
+      </div>
+    </div>
+
+    <div role="tabpanel" id="t6" aria-labelledby="b6" hidden>
+      <p><strong>Mandatory:</strong> a Qualtrics question with <code>ForceResponse = ON</code> is written with <code>mandatory = Y</code>. Other validation (content type, regex, min/max characters) is counted in the report but not carried over.</p>
+      <p><strong>Sliders</strong> become numerical input (<code>N</code>). The slider's range is kept as question attributes, so you can switch the question to LimeSurvey's slider display and keep the original scale.</p>
+      <div class="ba">
+        <div><div class="lbl">Qualtrics slider</div><pre><span class="k">"QuestionType"</span>: <span class="s">"Slider"</span>, <span class="k">"Selector"</span>: <span class="s">"HSLIDER"</span>,
+<span class="k">"Configuration"</span>: {
+  <span class="k">"CSSliderMin"</span>: <span class="s">0</span>,
+  <span class="k">"CSSliderMax"</span>: <span class="s">10</span> }</pre></div>
+        <div><div class="lbl">LimeSurvey attributes</div><pre>&lt;type&gt;<span class="g">N</span>&lt;/type&gt;
+question_attributes:
+  slider_min = <span class="g">0</span>
+  slider_max = <span class="g">10</span></pre></div>
+      </div>
+    </div>
+
+    <div role="tabpanel" id="t7" aria-labelledby="b7" hidden>
+      <p>Finally, the rows are serialised as a LimeSurvey 5.x structure document (<code>DBVersion 500</code>), one XML section per table. The survey's title and language come from the QSF, and the new survey starts <em>inactive</em> so you can review it first. The XML is written in UTF-8, and HTML in question text is escaped so formatting survives the round trip. The converter uses only Python's standard library (<code>json</code>, <code>re</code>, <code>xml.etree</code>).</p>
+<pre>&lt;document&gt;
+  &lt;LimeSurveyDocType&gt;Survey&lt;/LimeSurveyDocType&gt;
+  &lt;DBVersion&gt;500&lt;/DBVersion&gt;
+  &lt;languages&gt;&lt;language&gt;EN&lt;/language&gt;&lt;/languages&gt;
+  &lt;surveys&gt;…&lt;/surveys&gt;                      <span class="c">&lt;!-- settings, title --&gt;</span>
+  &lt;surveys_languagesettings&gt;…&lt;/surveys_languagesettings&gt;
+  &lt;groups&gt;…&lt;/groups&gt;                        <span class="c">&lt;!-- one row per block --&gt;</span>
+  &lt;questions&gt;…&lt;/questions&gt;                  <span class="c">&lt;!-- type, code, text, relevance, mandatory --&gt;</span>
+  &lt;subquestions&gt;…&lt;/subquestions&gt;            <span class="c">&lt;!-- array / ranking rows --&gt;</span>
+  &lt;answers&gt;…&lt;/answers&gt;                      <span class="c">&lt;!-- answer options, A1 … An --&gt;</span>
+  &lt;question_attributes&gt;…&lt;/question_attributes&gt;
+  &lt;conditions/&gt;
+&lt;/document&gt;</pre>
+    </div>
+  </div>
+
+  <h3>Stage 3: verification</h3>
+  <p style="max-width:72ch">The converter doesn't just trust itself. After writing the <code>.lss</code>, the app parses it again and compares the result with the inspection from Stage 1. A count that doesn't match isn't automatically a bug, because some differences are expected. The checks are there so that no difference goes unnoticed.</p>
+  <div class="scroll"><table class="tbl">
+    <tr><th>#</th><th>Check</th><th>Compares</th><th>Can be</th></tr>
+    <tr><td>1</td><td>Question count</td><td>SQ elements in QSF vs. question rows in LSS</td><td><span class="pill ok">OK</span> <span class="pill warn">!!</span></td></tr>
+    <tr><td>2</td><td>Group count</td><td>Qualtrics blocks vs. LimeSurvey groups</td><td><span class="pill ok">OK</span> <span class="pill warn">!!</span></td></tr>
+    <tr><td>3</td><td>Type coverage</td><td>Every type/selector pair has a mapping</td><td><span class="pill ok">OK</span> <span class="pill warn">!!</span></td></tr>
+    <tr><td>4</td><td>Answer options</td><td>QSF choices vs. answers + subquestions (within 10% counts as OK)</td><td><span class="pill ok">OK</span> <span class="pill warn">!!</span></td></tr>
+    <tr><td>5</td><td>Mandatory</td><td>ForceResponse=ON vs. mandatory=Y</td><td><span class="pill ok">OK</span> <span class="pill warn">!!</span></td></tr>
+    <tr><td>6</td><td>Display logic</td><td>Questions with logic vs. questions with a relevance equation</td><td><span class="pill ok">OK</span> <span class="pill warn">!!</span> <span class="pill fail">FAIL</span></td></tr>
+    <tr><td>7</td><td>Conversion warnings</td><td>Warnings raised by the converter (e.g. unmapped types)</td><td><span class="pill ok">OK</span> <span class="pill warn">!!</span></td></tr>
+    <tr><td>8</td><td>Problem types</td><td>Types with no clean LimeSurvey equivalent</td><td><span class="pill warn">!!</span></td></tr>
+    <tr><td>9</td><td>JavaScript</td><td>Questions with custom Qualtrics JS</td><td><span class="pill warn">!!</span></td></tr>
+    <tr><td>10</td><td>Embedded data</td><td>Fields to set up as URL parameters</td><td><span class="pill info">i</span></td></tr>
+  </table></div>
+  <p style="max-width:72ch;color:var(--ink-2);font-size:.95rem">Overall verdict per file: any <strong>FAIL</strong> → “check(s) failed”, otherwise any warning → “OK with warnings”, otherwise “OK”. If the conversion itself throws an error, it is caught, shown for that file and written to the report, and the remaining files carry on.</p>
+</div></section>
+
+<section id="mapping"><div class="wrap">
+  <div class="eyebrow">Reference</div>
+  <h2>Question type mapping</h2>
+  <p class="intro">Every Qualtrics type/selector pair the converter knows, and the LimeSurvey type it becomes. Anything not listed becomes <code>T</code> (Long free text) with a warning.</p>
+  <div class="filter"><input id="q" type="search" placeholder="Filter, e.g. Matrix, slider, ranking…" aria-label="Filter mapping table"><span id="qn" class="eyebrow"></span></div>
+  <div class="scroll"><table class="tbl" id="map">
+    <thead><tr><th>Qualtrics type / selector</th><th>What it is</th><th>LS</th><th>LimeSurvey type</th></tr></thead>
+    <tbody>
+    <tr><td><code>MC / SAVR</code></td><td>Single answer, vertical</td><td class="code">L</td><td>List (radio)</td></tr>
+    <tr><td><code>MC / SAHR</code></td><td>Single answer, horizontal</td><td class="code">L</td><td>List (radio)</td></tr>
+    <tr><td><code>MC / DL</code></td><td>Dropdown list</td><td class="code">!</td><td>List (dropdown)</td></tr>
+    <tr><td><code>MC / MAVR</code></td><td>Multiple answer, vertical</td><td class="code">M</td><td>Multiple choice</td></tr>
+    <tr><td><code>MC / MAHR</code></td><td>Multiple answer, horizontal</td><td class="code">M</td><td>Multiple choice</td></tr>
+    <tr><td><code>MC / MSB</code></td><td>Multi-select box</td><td class="code">M</td><td>Multiple choice</td></tr>
+    <tr><td><code>TE / SL</code></td><td>Single-line text entry</td><td class="code">S</td><td>Short free text</td></tr>
+    <tr><td><code>TE / ML</code></td><td>Multi-line text entry</td><td class="code">T</td><td>Long free text</td></tr>
+    <tr><td><code>TE / ESTB</code></td><td>Essay text box</td><td class="code">T</td><td>Long free text</td></tr>
+    <tr><td><code>TE / FORM</code></td><td>Form (several fields)</td><td class="code">Q</td><td>Multiple short text</td></tr>
+    <tr><td><code>Matrix / Likert</code></td><td>Matrix table</td><td class="code">F</td><td>Array</td></tr>
+    <tr><td><code>Matrix / TE</code></td><td>Matrix of text entries</td><td class="code">;</td><td>Array (texts)</td></tr>
+    <tr><td><code>Matrix / Bipolar</code></td><td>Bipolar matrix</td><td class="code">1</td><td>Array dual scale</td></tr>
+    <tr><td><code>RO / DND</code></td><td>Rank order, drag &amp; drop</td><td class="code">R</td><td>Ranking</td></tr>
+    <tr><td><code>DB / TB, GRB</code></td><td>Descriptive text / graphic</td><td class="code">X</td><td>Text display</td></tr>
+    <tr><td><code>Slider / HSLIDER</code></td><td>Horizontal slider</td><td class="code">N</td><td>Numerical input (range kept)</td></tr>
+    <tr><td><code>Slider / HBAR</code></td><td>Slider bar</td><td class="code">N</td><td>Numerical input (range kept)</td></tr>
+    <tr><td><code>CS</code></td><td>Constant sum</td><td class="code">K</td><td>Multiple numerical</td></tr>
+    <tr><td><code>SBS</code></td><td>Side by side</td><td class="code">F</td><td>Array (best effort)</td></tr>
+    <tr><td><code>PGR</code></td><td>Pick, group &amp; rank</td><td class="code">R</td><td>Ranking (best effort)</td></tr>
+    <tr><td><code>Timing</code></td><td>Page timer</td><td class="code">X</td><td>Text display placeholder (no equivalent)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Structure mapping</h3>
+  <div class="scroll"><table class="tbl">
+    <tr><th>Qualtrics</th><th>LimeSurvey</th><th>Status</th></tr>
+    <tr><td>Blocks</td><td>Question groups</td><td><span class="pill ok">converted</span></td></tr>
+    <tr><td>Survey flow order</td><td>Group order</td><td><span class="pill ok">converted</span></td></tr>
+    <tr><td>Display logic</td><td>Relevance equations</td><td><span class="pill ok">converted</span> AND-joined, FIXME on unknowns</td></tr>
+    <tr><td>Piped text <code>${e://…}</code>, <code>${q://…}</code></td><td><code>{VAR}</code>, <code>{CODE.NAOK}</code></td><td><span class="pill ok">converted</span></td></tr>
+    <tr><td>Force response</td><td>Mandatory = Y</td><td><span class="pill ok">converted</span></td></tr>
+    <tr><td>Embedded data</td><td>URL parameters</td><td><span class="pill info">detected</span> set up manually</td></tr>
+    <tr><td>Choice / block randomisation</td><td>Randomisation groups</td><td><span class="pill warn">detected</span> flagged in report</td></tr>
+    <tr><td>Custom JavaScript</td><td>—</td><td><span class="pill warn">not converted</span> flagged</td></tr>
+  </table></div>
+</div></section>
+
+<section id="limits"><div class="wrap">
+  <div class="cols">
+    <div>
+      <div class="eyebrow">Please read</div>
+      <h2>Known limitations</h2>
+      <ul>
+        <li><strong>Timing questions</strong> become display-only placeholders.</li>
+        <li><strong>Custom JavaScript</strong> isn't transferred.</li>
+        <li><strong>Complex display logic</strong> (OR, nested groups) may come out simplified or with <code>FIXME</code> markers.</li>
+        <li><strong>Block randomisers</strong> are detected but not turned into LimeSurvey randomisation groups.</li>
+        <li><strong>Loop &amp; merge</strong> piped text becomes <code>FIXME_LOOP_REF</code>.</li>
+        <li><strong>Side-by-side</strong> questions become a single array as a best-effort approximation.</li>
+        <li>Validation beyond <em>force response</em> isn't carried over.</li>
+        <li>Count differences between input and output are often expected (trash blocks, matrix rows).</li>
+      </ul>
+    </div>
+    <div>
+      <div class="eyebrow">Security &amp; privacy</div>
+      <h2>Privacy</h2>
+      <ul>
+        <li><strong>Offline.</strong> The program doesn't connect to the internet, and it has no telemetry or analytics. This website has no tracking either. It only loads fonts from Google Fonts.</li>
+        <li><strong>Local files only.</strong> It reads the files you choose and writes to the output folder you choose.</li>
+        <li><strong>Stdlib only.</strong> The converter uses only Python's standard library. The window version adds one open-source Tk extension for drag &amp; drop (<a href="https://github.com/petasis/tkdnd">tkdnd</a>).</li>
+        <li><strong>Auditable.</strong> The full source is in the repository, along with a Bandit security report and a Process Monitor guide for checking file access yourself.</li>
+      </ul>
+      <p>Because nothing leaves your computer, it may be easier to use with sensitive survey material. Whether it meets your institution's or ethics board's rules is for you to check, though.</p>
+    </div>
+  </div>
+
+  <h3>Questions &amp; troubleshooting</h3>
+  <details><summary>Do I need Python?</summary><div>No. The downloads bundle everything. If you prefer to run from source: Python 3.10+, then <code>python source/gui.py</code> (window) or <code>python source/convert.py input/ -o output/</code> (command line). For drag &amp; drop, also run <code>pip install tkinterdnd2</code>. Without it, the drop zone works as a click-to-browse button.</div></details>
+  <details><summary>Windows says “Windows protected your PC”</summary><div>The exe isn't code-signed. Click <em>More info → Run anyway</em>. If you'd rather not, run from source or build it yourself; the GitHub Actions workflow in the repository shows exactly how the release builds are made.</div></details>
+  <details><summary>macOS says the app “cannot be opened”</summary><div>Right-click (or Control-click) the app → <em>Open</em> → <em>Open</em>. You only need to do this once. If it's still blocked, go to <em>System Settings → Privacy &amp; Security</em> and click <em>Open Anyway</em>.</div></details>
+  <details><summary>The window doesn't open or closes immediately</summary><div>Run the console version <code>QualtricsToLime</code> instead. It prints any error message, or run <code>python source/gui.py</code> from a terminal to see the full error.</div></details>
+  <details><summary>Why does the question count differ?</summary><div>Usually it's expected. Questions in the Trash block aren't converted, and the inspector counts every question element, including unused ones.</div></details>
+  <details><summary>Can I convert many surveys at once?</summary><div>Yes. Drop a whole folder onto the window, or put all files in <code>input/</code> for the folder-based version. One report covers the whole batch.</div></details>
+</div></section>
+
+<section id="disclaimer"><div class="wrap narrow">
+  <div class="eyebrow">Disclaimer</div>
+  <h2>Please note</h2>
+  <ul>
+    <li><strong>Provided as-is, without warranty.</strong> The software and this website come with no warranty of any kind, express or implied, including fitness for a particular purpose. You use them at your own risk. The authors aren't liable for any damage, data loss, faulty surveys or other consequences of using them.</li>
+    <li><strong>Check every converted survey yourself.</strong> Conversions can be incomplete or wrong. Always review and test a converted survey before using it to collect data. You remain responsible for your study and its compliance with ethical, legal and institutional requirements.</li>
+    <li><strong>Unofficial and independent.</strong> This project isn't affiliated with, endorsed by or sponsored by Qualtrics or LimeSurvey. “Qualtrics” and “LimeSurvey” are trademarks of their respective owners and are mentioned only to describe which file formats the tool works with.</li>
+    <li><strong>Made with AI.</strong> The converter's code and this website, including the text, were generated by AI (Claude, by Anthropic) under the direction of Konrad Schweizer. They may contain errors.</li>
+    <li><strong>No support obligation.</strong> This is a free helper shared to be useful. Questions and bug reports are welcome on <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/issues">GitHub</a>, but there's no guaranteed response or fix.</li>
+  </ul>
+</div></section>
+
+<footer><div class="wrap">
+  <span>QualtricsToLime: a free, unofficial helper tool, not affiliated with Qualtrics or LimeSurvey.<br>Idea &amp; guidance: Konrad Schweizer · Code and this website created by AI (Claude, Anthropic). Provided as-is, without warranty.</span>
+  <span><a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration">Source on GitHub</a> · <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases">Releases</a></span>
+</div></footer>
+
+<dialog id="lb"><img alt=""><p></p></dialog>
+
+<script>
+// Lightbox for screenshots
+const lb = document.getElementById('lb');
+document.querySelectorAll('.shot').forEach(img => img.addEventListener('click', () => {
+  lb.querySelector('img').src = img.src; lb.querySelector('img').alt = img.alt;
+  lb.querySelector('p').textContent = img.closest('figure')?.querySelector('figcaption')?.textContent || '';
+  lb.showModal();
+}));
+lb.addEventListener('click', () => lb.close());
+
+// Tabs (with arrow-key navigation)
+document.querySelectorAll('[data-tabs]').forEach(box => {
+  const tabs = [...box.querySelectorAll('[role=tab]')];
+  const select = t => tabs.forEach(b => {
+    const on = b === t;
+    b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1;
+    document.getElementById(b.getAttribute('aria-controls')).hidden = !on;
+  });
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (d) { const n = tabs[(i + d + tabs.length) % tabs.length]; select(n); n.focus(); }
+    });
+  });
+});
+
+// Mapping table filter
+const q = document.getElementById('q'), qn = document.getElementById('qn');
+const rows = [...document.querySelectorAll('#map tbody tr')];
+q.addEventListener('input', () => {
+  const v = q.value.trim().toLowerCase(); let n = 0;
+  rows.forEach(r => { const hit = !v || r.textContent.toLowerCase().includes(v); r.hidden = !hit; n += hit; });
+  qn.textContent = v ? `${n} of ${rows.length}` : '';
+});
+
+// Light up step numbers as they scroll into view
+const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('done')), {rootMargin: '0px 0px -45% 0px'});
+document.querySelectorAll('.step').forEach(s => io.observe(s));
+</script>
+</body>
+</html>
