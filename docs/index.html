@@ -41,7 +41,7 @@ nav .brand{font-family:var(--serif);font-weight:800;font-size:1.1rem;color:var(-
 nav .brand span{background:var(--lime);color:#1d1f1a;padding:0 .25em;border-radius:3px}
 nav a.l{color:var(--ink-2);text-decoration:none;font-size:.92rem;font-weight:500}
 nav a.l:hover{color:var(--ink)}
-@media (max-width:760px){nav a.l:not(.gh){display:none}}
+@media (max-width:760px){nav a.l{display:none}}
 
 /* hero */
 header.hero{padding:88px 0 56px;border-bottom:1px solid var(--rule)}
@@ -180,56 +180,89 @@ dialog{border:0;padding:0;background:transparent;max-width:96vw;max-height:94vh}
 dialog::backdrop{background:rgba(15,16,12,.82)}
 dialog img{max-width:96vw;max-height:90vh;display:block;border-radius:8px}
 dialog p{color:#ddd;font-family:var(--mono);font-size:.85rem;text-align:center}
+
+/* --- minimal / download-first layout --- */
+header.hero{padding:72px 0 56px}
+.hero h1{font-size:clamp(2.4rem,6vw,4.2rem);max-width:none;margin:0 0 .3em}
+.hero h1 .to{color:var(--lime-ink);font-weight:400}
+.hero p.lede{font-size:1.15rem;margin-bottom:28px}
+.dl{background:var(--card);border:1.5px solid var(--ink);border-radius:14px;padding:26px;box-shadow:var(--shadow);margin-bottom:24px}
+.dl-main{display:flex;align-items:center;gap:16px;background:var(--lime);color:#1d1f1a;border:1.5px solid #1d1f1a;border-radius:10px;padding:18px 22px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.dl-main:hover{transform:translateY(-2px);box-shadow:5px 5px 0 #1d1f1a}
+.dl-main:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.dl-ico{font-size:1.6rem;line-height:1;width:44px;height:44px;border-radius:50%;background:#1d1f1a;color:var(--lime);display:grid;place-items:center;flex:none}
+.dl-main b{display:block;font-family:var(--serif);font-size:1.5rem;font-weight:600;line-height:1.2}
+.dl-main small{font-family:var(--mono);font-size:.8rem;opacity:.75}
+.dl-alt{display:flex;flex-wrap:wrap;gap:6px 16px;margin:16px 0 0;font-size:.92rem;color:var(--muted)}
+.dl-alt a{color:var(--ink-2)}
+.dl-alt a.current{display:none}
+.dl-alt small{color:var(--muted)}
+.dl-facts{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-wrap:wrap;gap:6px 20px;font-size:.9rem;color:var(--ink-2)}
+.dl-facts li::before{content:"✓ ";color:var(--lime-ink);font-weight:600}
+.dl-first{font-size:.86rem;color:var(--muted);margin:16px 0 0;border-top:1px solid var(--rule);padding-top:14px}
+.aibox{margin:0;max-width:none}
+nav .nav-dl{padding:.4em .9em;font-size:.88rem;background:var(--lime);color:#1d1f1a;border-color:#1d1f1a}
+section{padding:64px 0}
+ol.quick{counter-reset:q;list-style:none;padding:0;margin:0 0 8px}
+ol.quick li{counter-increment:q;position:relative;padding:10px 0 10px 48px;border-bottom:1px solid var(--rule)}
+ol.quick li::before{content:counter(q);position:absolute;left:0;top:9px;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:.95rem}
+details.more{border:1.5px solid var(--ink);border-radius:12px;background:var(--card);padding:0 22px;margin:22px 0 0}
+details.more>summary{font-family:var(--serif);font-size:1.15rem;font-weight:600;padding:16px 0}
+details.more[open]>summary{border-bottom:1px solid var(--rule);margin-bottom:12px}
+details.more .step{grid-template-columns:72px 1fr;gap:18px;padding:32px 0}
+details.more .num{font-size:3.4rem;top:70px}
+@media (max-width:760px){details.more{padding:0 14px}details.more .step{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <nav><div class="wrap">
   <a class="brand" href="#top">Qualtrics<span>To</span>Lime</a>
-  <a class="l" href="#demo">Demo</a>
-  <a class="l" href="#how">How it works</a>
-  <a class="l" href="#mapping">Mappings</a>
+  <a class="l" href="#guide">Guide</a>
+  <a class="l" href="#details">How it works</a>
   <a class="l" href="#limits">Limitations</a>
-  <a class="l" href="#disclaimer">Disclaimer</a>
   <a class="l gh" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration">GitHub ↗</a>
+  <a class="btn nav-dl" href="#download">Download</a>
 </div></nav>
 
-<header class="hero" id="top"><div class="wrap">
-  <div class="eyebrow reveal d1">A free helper tool · not a product · no account, no ads</div>
-  <h1 class="reveal d2" style="max-width:none">Qualtrics <em>to</em> LimeSurvey</h1>
-  <p class="lede reveal d3">A small open-source tool that converts a Qualtrics survey file (<code>.qsf</code>) into a LimeSurvey structure file (<code>.lss</code>). It was made to help researchers who need to move a survey and would rather not rebuild it by hand. It takes care of the repetitive part (questions, blocks, answer options, display logic, piped text) and lists what it couldn't convert. You will still need to check the result yourself.</p>
-  <p class="aibox reveal d3"><b>About this page:</b> this website, its text and the converter's code were created by AI (Claude, by Anthropic), based on an idea and guidance from Konrad Schweizer. The screenshots come from the real program; the demo survey is made up. Please read it with that in mind and report anything that looks wrong on <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/issues">GitHub</a>.</p>
-  <div class="cta reveal d4">
-    <a class="btn" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-Windows.zip">⬇ Windows</a>
-    <a class="btn" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-macOS-AppleSilicon.zip">⬇ Mac (Apple Silicon)</a>
-    <a class="btn" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-macOS-Intel.zip">⬇ Mac (Intel)</a>
-    <a class="btn" href="#demo">How to use it ↓</a>
+<header class="hero" id="top"><div class="wrap narrow">
+  <h1 class="reveal d1">Qualtrics <span class="to">→</span> LimeSurvey</h1>
+  <p class="lede reveal d2">A free tool that converts a Qualtrics survey export (<code>.qsf</code>) into a file you can import into LimeSurvey (<code>.lss</code>). It saves you rebuilding the survey by hand. You'll still need to check the result.</p>
+
+  <div class="dl reveal d3" id="download">
+    <a class="dl-main" id="dl-main" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-Windows.zip">
+      <span class="dl-ico" aria-hidden="true">↓</span>
+      <span><b id="dl-label">Download for Windows</b><small id="dl-meta">v1.1.0 · zip · 20 MB</small></span>
+    </a>
+    <div class="dl-alt">
+      <span>Other systems:</span>
+      <a data-os="win" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-Windows.zip">Windows <small>20 MB</small></a>
+      <a data-os="mac-arm" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-macOS-AppleSilicon.zip">Mac – Apple Silicon (M1–M4) <small>44 MB</small></a>
+      <a data-os="mac-intel" href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QualtricsToLime-macOS-Intel.zip">Mac – Intel <small>47 MB</small></a>
+    </div>
+    <ul class="dl-facts">
+      <li>No installation: unzip and open</li>
+      <li>Works offline, files stay on your computer</li>
+      <li>Free &amp; open source (MIT)</li>
+    </ul>
+    <p class="dl-first"><b>Opening it the first time:</b> on Windows, click <em>More info → Run anyway</em> if a blue warning appears. On a Mac, right-click the app → <em>Open</em> → <em>Open</em>. The program isn't code-signed yet, see <a href="#signing">code signing policy</a>.</p>
   </div>
-  <div class="conveyor reveal d4" aria-hidden="true">
-    <div class="box"><b>survey.qsf</b><span>Qualtrics export · JSON</span></div>
-    <div class="arrow"><i></i></div>
-    <div class="box mid"><b>QualtricsToLime</b><span>inspect → convert → verify</span></div>
-    <div class="arrow"><i></i></div>
-    <div class="box"><b>survey.lss</b><span>LimeSurvey import · XML</span></div>
-  </div>
+
+  <p class="aibox reveal d4"><b>Made with AI:</b> this website and the converter's code were created by AI (Claude, by Anthropic) based on an idea by Konrad Schweizer. The screenshots come from the real program; the demo survey is made up. Spotted a mistake? <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/issues">Tell us on GitHub</a>.</p>
 </div></header>
 
-<section id="why"><div class="wrap">
-  <h2>Why this exists</h2>
-  <p class="intro">Moving a study from Qualtrics to LimeSurvey usually means re-typing every question, answer option and logic rule, and every re-typed condition is a chance for a small mistake. This tool was written to save that work. It gives you a rough first version of the survey to check and fix, not a finished one. It is shared for free in the hope that it's useful to others. There is nothing to buy and no support contract.</p>
-  <div class="facts">
-    <div><b>No installation</b><span>Unzip and double-click. Python is not required.</span></div>
-    <div><b>Works offline</b><span>Files are processed on your own computer. The program contains no network code.</span></div>
-    <div><b>Basic checks</b><span>Ten automatic count comparisons between input and output. They help, but they are not a guarantee.</span></div>
-    <div><b>Has gaps</b><span>Some Qualtrics features can't be converted. These are listed in the report and <a href="#limits">below</a>.</span></div>
-  </div>
-</div></section>
+<section id="guide"><div class="wrap narrow">
+  <h2>How to use it</h2>
+  <ol class="quick">
+    <li><b>Export</b> your survey in Qualtrics: <em>Tools / … menu → Export survey → QSF</em>.</li>
+    <li><b>Open</b> <code>QualtricsToLimeGUI</code> and drag the <code>.qsf</code> file onto the window.</li>
+    <li><b>Convert.</b> Press <em>Convert</em> and read the checks. Amber lines show what to look at.</li>
+    <li><b>Import</b> the <code>.lss</code> in LimeSurvey: <em>Create survey → Import</em>. Then test the survey before using it.</li>
+  </ol>
+  <figure><img class="shot" src="img/04-results.png" alt="QualtricsToLime window after converting a demo survey: status, input and output summary" width="1202" height="792" loading="lazy"><figcaption>The program after converting the demo survey. Click to enlarge.</figcaption></figure>
 
-<section id="demo"><div class="wrap">
-  <div class="eyebrow">Demo · step by step</div>
-  <h2>How to use it, step by step</h2>
-  <p class="intro">This walkthrough converts a small demo survey, <em>Coffee Habits</em>, using the window version of the converter. The demo survey was written to use almost every feature: four blocks plus a trash block, a slider, a matrix, a ranking question, display logic, piped text, custom JavaScript, embedded data and a timing question. <a href="demo/coffee_habits_demo.qsf" download>Download the demo .qsf</a> to follow along, or look at <a href="demo/coffee_habits_demo.lss" download>the converted .lss</a>.</p>
-
+  <details class="more"><summary>Full walkthrough with screenshots</summary>
+  <p class="intro">The walkthrough converts a small, made-up demo survey. You can <a href="demo/coffee_habits_demo.qsf" download>download the demo .qsf</a> to try it, and compare with <a href="demo/coffee_habits_demo.lss" download>the converted .lss</a>.</p>
   <div class="step">
     <div class="num">1</div>
     <div class="body">
@@ -364,14 +397,15 @@ dialog p{color:#ddd;font-family:var(--mono);font-size:.85rem;text-align:center}
       </ul>
     </div>
   </div>
-  <p class="note"><b>Prefer no clicking?</b> The download also includes <code>QualtricsToLime</code>, a folder-based version. Put <code>.qsf</code> files in <code>input/</code>, double-click it, and collect the results from <code>output/</code>. It runs the same analysis, conversion, verification and report.</p>
+  <p class="note"><b>Prefer no clicking?</b> The download also includes <code>QualtricsToLime</code>, a folder-based version. Put <code>.qsf</code> files in <code>input/</code>, double-click it, and collect the results from <code>output/</code>.</p>
+  </details>
 </div></section>
 
-<section id="how"><div class="wrap">
-  <div class="eyebrow">How it works</div>
-  <h2>Three stages: inspect, convert, verify</h2>
-  <p class="intro">A <code>.qsf</code> file is JSON: a <code>SurveyEntry</code> with metadata and a flat list of <code>SurveyElements</code>. Each element is one piece of the survey: <code>BL</code> blocks, <code>FL</code> survey flow, <code>SQ</code> questions, <code>SO</code> options. A <code>.lss</code> file is XML that mirrors LimeSurvey's database tables (<code>surveys</code>, <code>groups</code>, <code>questions</code>, <code>subquestions</code>, <code>answers</code>, <code>question_attributes</code>). Converting means turning one into the other.</p>
-
+<section id="details"><div class="wrap">
+  <h2>How it works</h2>
+  <p class="intro">For the curious. In short, the tool <em>inspects</em> the Qualtrics file, <em>converts</em> each block, question, answer and logic rule into LimeSurvey's format, and then <em>verifies</em> the result by comparing the two files.</p>
+  <details class="more"><summary>Technical details: pipeline, conversion rules, checks</summary>
+  <p class="intro">A <code>.qsf</code> file is JSON: a <code>SurveyEntry</code> with metadata plus a flat list of <code>SurveyElements</code> (<code>BL</code> blocks, <code>FL</code> survey flow, <code>SQ</code> questions, <code>SO</code> options). A <code>.lss</code> file is XML that mirrors LimeSurvey's database tables.</p>
   <div class="pipe">
     <div class="stage"><h4>Inspect</h4><div class="file">qsf_inspector.py</div>
       <ul><li>Reads the QSF and counts questions, blocks and types</li><li>Finds display logic, validation, piped text, JavaScript, randomisation, branches and embedded data</li><li>Flags problem and unmapped types</li><li>Computes a migration risk score</li></ul></div>
@@ -557,11 +591,8 @@ question_attributes:
     <tr><td>10</td><td>Embedded data</td><td>Fields to set up as URL parameters</td><td><span class="pill info">i</span></td></tr>
   </table></div>
   <p style="max-width:72ch;color:var(--ink-2);font-size:.95rem">Overall verdict per file: any <strong>FAIL</strong> → “check(s) failed”, otherwise any warning → “OK with warnings”, otherwise “OK”. If the conversion itself throws an error, it is caught, shown for that file and written to the report, and the remaining files carry on.</p>
-</div></section>
-
-<section id="mapping"><div class="wrap">
-  <div class="eyebrow">Reference</div>
-  <h2>Question type mapping</h2>
+  </details>
+  <details class="more" id="mapping"><summary>Question type mapping table</summary>
   <p class="intro">Every Qualtrics type/selector pair the converter knows, and the LimeSurvey type it becomes. Anything not listed becomes <code>T</code> (Long free text) with a warning.</p>
   <div class="filter"><input id="q" type="search" placeholder="Filter, e.g. Matrix, slider, ranking…" aria-label="Filter mapping table"><span id="qn" class="eyebrow"></span></div>
   <div class="scroll"><table class="tbl" id="map">
@@ -603,6 +634,7 @@ question_attributes:
     <tr><td>Choice / block randomisation</td><td>Randomisation groups</td><td><span class="pill warn">detected</span> flagged in report</td></tr>
     <tr><td>Custom JavaScript</td><td>—</td><td><span class="pill warn">not converted</span> flagged</td></tr>
   </table></div>
+  </details>
 </div></section>
 
 <section id="limits"><div class="wrap">
@@ -625,9 +657,9 @@ question_attributes:
       <div class="eyebrow">Security &amp; privacy</div>
       <h2>Privacy</h2>
       <ul>
-        <li><strong>Offline.</strong> The program doesn't connect to the internet, and it has no telemetry or analytics. This website has no tracking either. It only loads fonts from Google Fonts.</li>
+        <li><strong>Offline.</strong> The program doesn't connect to the internet, and it has no telemetry or analytics. This website has no tracking. It only loads fonts from Google Fonts.</li>
         <li><strong>Local files only.</strong> It reads the files you choose and writes to the output folder you choose.</li>
-        <li><strong>Stdlib only.</strong> The converter uses only Python's standard library. The window version adds one open-source Tk extension for drag &amp; drop (<a href="https://github.com/petasis/tkdnd">tkdnd</a>).</li>
+        <li><strong>Open source.</strong> MIT-licensed. The bundled third-party components are listed in <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/blob/main/THIRD_PARTY_NOTICES.md">THIRD_PARTY_NOTICES</a>.</li>
         <li><strong>Auditable.</strong> The full source is in the repository, along with a Bandit security report and a Process Monitor guide for checking file access yourself.</li>
       </ul>
       <p>Because nothing leaves your computer, it may be easier to use with sensitive survey material. Whether it meets your institution's or ethics board's rules is for you to check, though.</p>
@@ -636,16 +668,25 @@ question_attributes:
 
   <h3>Questions &amp; troubleshooting</h3>
   <details><summary>Do I need Python?</summary><div>No. The downloads bundle everything. If you prefer to run from source: Python 3.10+, then <code>python source/gui.py</code> (window) or <code>python source/convert.py input/ -o output/</code> (command line). For drag &amp; drop, also run <code>pip install tkinterdnd2</code>. Without it, the drop zone works as a click-to-browse button.</div></details>
-  <details><summary>Windows says “Windows protected your PC”</summary><div>The exe isn't code-signed. Click <em>More info → Run anyway</em>. If you'd rather not, run from source or build it yourself; the GitHub Actions workflow in the repository shows exactly how the release builds are made.</div></details>
+  <details><summary>Windows says “Windows protected your PC”</summary><div>The exe isn't code-signed yet (see <a href="#signing">code signing policy</a>). Click <em>More info → Run anyway</em>. If you'd rather not, run from source or build it yourself; the GitHub Actions workflow in the repository shows exactly how the release builds are made.</div></details>
   <details><summary>macOS says the app “cannot be opened”</summary><div>Right-click (or Control-click) the app → <em>Open</em> → <em>Open</em>. You only need to do this once. If it's still blocked, go to <em>System Settings → Privacy &amp; Security</em> and click <em>Open Anyway</em>.</div></details>
   <details><summary>The window doesn't open or closes immediately</summary><div>Run the console version <code>QualtricsToLime</code> instead. It prints any error message, or run <code>python source/gui.py</code> from a terminal to see the full error.</div></details>
   <details><summary>Why does the question count differ?</summary><div>Usually it's expected. Questions in the Trash block aren't converted, and the inspector counts every question element, including unused ones.</div></details>
   <details><summary>Can I convert many surveys at once?</summary><div>Yes. Drop a whole folder onto the window, or put all files in <code>input/</code> for the folder-based version. One report covers the whole batch.</div></details>
 </div></section>
 
+<section id="signing"><div class="wrap narrow">
+  <h2>Code signing policy</h2>
+  <p>Windows releases are being set up for free code signing provided by <a href="https://signpath.io">SignPath.io</a>, certificate by <a href="https://signpath.org">SignPath Foundation</a>. <strong>The application is still pending, so current downloads are unsigned.</strong> Once signing is active, every signed file will be built automatically from this repository's source code by <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/blob/main/.github/workflows/build.yml">GitHub Actions</a>, and each release will be approved by hand before it is signed.</p>
+  <ul>
+    <li><strong>Committers and reviewers:</strong> <a href="https://github.com/KonradSchweizer">Konrad Schweizer</a></li>
+    <li><strong>Approvers:</strong> <a href="https://github.com/KonradSchweizer">Konrad Schweizer</a></li>
+  </ul>
+  <p><strong>Privacy:</strong> this program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it. It has no network functionality at all.</p>
+</div></section>
+
 <section id="disclaimer"><div class="wrap narrow">
-  <div class="eyebrow">Disclaimer</div>
-  <h2>Please note</h2>
+  <h2>Disclaimer</h2>
   <ul>
     <li><strong>Provided as-is, without warranty.</strong> The software and this website come with no warranty of any kind, express or implied, including fitness for a particular purpose. You use them at your own risk. The authors aren't liable for any damage, data loss, faulty surveys or other consequences of using them.</li>
     <li><strong>Check every converted survey yourself.</strong> Conversions can be incomplete or wrong. Always review and test a converted survey before using it to collect data. You remain responsible for your study and its compliance with ethical, legal and institutional requirements.</li>
@@ -663,6 +704,32 @@ question_attributes:
 <dialog id="lb"><img alt=""><p></p></dialog>
 
 <script>
+// Pick the right download for this computer
+(async () => {
+  const main = document.getElementById('dl-main'), label = document.getElementById('dl-label'), meta = document.getElementById('dl-meta');
+  const links = {win: document.querySelector('[data-os=win]'), arm: document.querySelector('[data-os=mac-arm]'), intel: document.querySelector('[data-os=mac-intel]')};
+  const names = {win: ['Download for Windows', '20 MB'], arm: ['Download for Mac (Apple Silicon)', '44 MB'], intel: ['Download for Mac (Intel)', '47 MB']};
+  let pick = 'win';
+  if (/Mac/i.test(navigator.platform) || /Mac OS X/.test(navigator.userAgent)) {
+    pick = 'arm';   // most Macs since 2020; Safari can't tell, so Intel stays one click away
+    try {
+      const h = navigator.userAgentData && await navigator.userAgentData.getHighEntropyValues(['architecture']);
+      if (h && h.architecture === 'x86') pick = 'intel';
+    } catch (e) {}
+  }
+  main.href = links[pick].href; label.textContent = names[pick][0]; meta.textContent = 'v1.1.0 · zip · ' + names[pick][1];
+  links[pick].classList.add('current');
+})();
+
+// Links into collapsed sections open them first
+const openTarget = () => {
+  const t = location.hash && document.getElementById(location.hash.slice(1));
+  for (let d = t && t.closest('details'); d; d = d.parentElement.closest('details')) d.open = true;
+  if (t) t.scrollIntoView();
+};
+window.addEventListener('hashchange', openTarget);
+openTarget();
+
 // Lightbox for screenshots
 const lb = document.getElementById('lb');
 document.querySelectorAll('.shot').forEach(img => img.addEventListener('click', () => {

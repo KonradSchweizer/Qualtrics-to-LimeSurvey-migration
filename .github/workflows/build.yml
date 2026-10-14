@@ -25,6 +25,11 @@ jobs:
             package_name: QualtricsToLime-macOS-AppleSilicon
             binary: QualtricsToLime
     runs-on: ${{ matrix.os }}
+    env:
+      # Windows code signing via SignPath Foundation (free for open source).
+      # Dormant until the SIGNPATH_API_TOKEN secret and the SIGNPATH_* repository
+      # variables exist; until then the .exe files are released unsigned as before.
+      SIGNPATH_API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -35,11 +40,48 @@ jobs:
       - name: Install PyInstaller (+ drag & drop extension for the GUI)
         run: pip install pyinstaller tkinterdnd2
 
+      - name: Write Windows version metadata (product name + version)
+        shell: bash
+        run: python tools/write_version_info.py "${{ github.ref_name }}" build/version_info.txt
+
       - name: Build console executable
-        run: pyinstaller --onefile --name QualtricsToLime --paths source source/app.py
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then VERSION_ARG="--version-file build/version_info.txt"; fi
+          pyinstaller --onefile --name QualtricsToLime --paths source $VERSION_ARG source/app.py
 
       - name: Build GUI executable (windowed)
-        run: pyinstaller QualtricsToLimeGUI.spec --noconfirm
+        shell: bash
+        run: |
+          if [ "${{ runner.os }}" = "Windows" ]; then export QTL_VERSION_FILE="$PWD/build/version_info.txt"; fi
+          pyinstaller QualtricsToLimeGUI.spec --noconfirm
+
+      - name: Upload unsigned Windows executables for signing
+        id: upload-unsigned
+        if: runner.os == 'Windows' && env.SIGNPATH_API_TOKEN != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-windows-exes
+          path: |
+            dist/QualtricsToLime.exe
+            dist/QualtricsToLimeGUI.exe
+
+      - name: Sign Windows executables (SignPath)
+        if: runner.os == 'Windows' && env.SIGNPATH_API_TOKEN != ''
+        uses: signpath/github-action-submit-signing-request@v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          github-artifact-id: ${{ steps.upload-unsigned.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed
+
+      - name: Use the signed executables
+        if: runner.os == 'Windows' && env.SIGNPATH_API_TOKEN != ''
+        shell: bash
+        run: cp signed/QualtricsToLime.exe signed/QualtricsToLimeGUI.exe dist/
 
       - name: Assemble package folder
         shell: bash
@@ -51,7 +93,7 @@ jobs:
           else
             cp -R dist/QualtricsToLimeGUI.app package/
           fi
-          cp README.md package/ 2>/dev/null || true
+          cp README.md LICENSE THIRD_PARTY_NOTICES.md package/ 2>/dev/null || true
           touch package/input/.gitkeep package/output/.gitkeep
 
       - name: Zip package

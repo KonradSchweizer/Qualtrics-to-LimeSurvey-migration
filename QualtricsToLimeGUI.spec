@@ -5,10 +5,13 @@
 # Drag & drop needs `pip install tkinterdnd2` before building; its native Tk
 # extension is collected automatically via collect_data_files below.
 
+import os
 import sys
 from PyInstaller.utils.hooks import collect_data_files
 
 IS_MAC = sys.platform == 'darwin'
+# Windows version resource (product name/version), written by tools/write_version_info.py
+VERSION_FILE = os.environ.get('QTL_VERSION_FILE') or None
 
 try:
     dnd_datas = collect_data_files("tkinterdnd2")
@@ -38,6 +41,7 @@ if not IS_MAC:
         debug=False, strip=False, upx=True,
         console=False,           # windowed: no terminal window
         disable_windowed_traceback=False,
+        version=VERSION_FILE,
         target_arch=None, codesign_identity=None, entitlements_file=None,
     )
 else:
