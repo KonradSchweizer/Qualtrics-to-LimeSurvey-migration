@@ -338,6 +338,8 @@ section{padding:64px 0}
 ol.quick{counter-reset:q;list-style:none;padding:0;margin:0 0 8px}
 ol.quick li{counter-increment:q;position:relative;padding:10px 0 10px 48px;border-bottom:1px solid var(--rule)}
 ol.quick li::before{content:counter(q);position:absolute;left:0;top:9px;width:30px;height:30px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:.95rem}
+#guide .wrap>h2,#guide ol.quick,#guide .intro,#guide .note{max-width:760px}
+.shot{max-width:962px}
 details.more{border:1.5px solid var(--ink);border-radius:12px;background:var(--card);padding:0 22px;margin:22px 0 0}
 details.more>summary{font-family:var(--serif);font-size:1.15rem;font-weight:600;padding:16px 0}
 details.more[open]>summary{border-bottom:1px solid var(--rule);margin-bottom:12px}
@@ -383,7 +385,7 @@ details.more .num{font-size:3.4rem;top:70px}
   <p class="aibox reveal d4"><b>Made with AI:</b> this website and the converter's code were created by AI (Claude, by Anthropic) based on an idea by Konrad Schweizer. The screenshots come from the real program; the demo survey is made up. Spotted a mistake? <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/issues">Tell us on GitHub</a>.</p>
 </div></header>
 
-<section id="guide"><div class="wrap narrow">
+<section id="guide"><div class="wrap">
   <h2>How to use it</h2>
   <ol class="quick">
     <li><b>Export</b> your survey in Qualtrics: <em>Tools / … menu → Export survey → QSF</em>.</li>
@@ -391,7 +393,7 @@ details.more .num{font-size:3.4rem;top:70px}
     <li><b>Convert.</b> Press <em>Convert</em> and read the checks. Amber lines show what to look at.</li>
     <li><b>Import</b> the <code>.lss</code> in LimeSurvey: <em>Create survey → Import</em>. Then test the survey before using it.</li>
   </ol>
-  <figure><img class="shot" src="img/04-results.png" alt="QSF2LSS window after converting a demo survey: status, input and output summary" width="1202" height="792" loading="lazy"><figcaption>The program after converting the demo survey. Click to enlarge.</figcaption></figure>
+  <figure><img class="shot" src="img/04-results.png" alt="QSF2LSS window after converting a demo survey: status, input and output summary" width="962" height="672" loading="lazy"><figcaption>The program after converting the demo survey. Click to enlarge.</figcaption></figure>
 
   <details class="more"><summary>Full walkthrough with screenshots</summary>
   <p class="intro">The walkthrough converts a small, made-up demo survey. You can <a href="demo/coffee_habits_demo.qsf" download>download the demo .qsf</a> to try it, and compare with <a href="demo/coffee_habits_demo.lss" download>the converted .lss</a>.</p>
@@ -426,7 +428,7 @@ details.more .num{font-size:3.4rem;top:70px}
     <div class="body">
       <h3>Start QSF2LSS</h3>
       <p>Download the zip for your computer from the buttons at the top, unzip it anywhere and start <code>QSF2LSS-GUI</code>. It opens one window. There is a drop zone at the top, a file list on the left, a details pane on the right and the controls along the bottom.</p>
-      <figure><img class="shot" src="img/01-start.png" alt="QSF2LSS window right after starting: empty file list and details pane" width="1202" height="792" loading="lazy"><figcaption>Fig. 1. The empty window when the program starts.</figcaption></figure>
+      <figure><img class="shot" src="img/01-start.png" alt="QSF2LSS window right after starting: empty file list and details pane" width="962" height="672" loading="lazy"><figcaption>Fig. 1. The empty window when the program starts.</figcaption></figure>
       <ul class="callouts">
         <li><b>Windows</b>Double-click <code>QSF2LSS-GUI.exe</code>. If SmartScreen warns you, click <em>More info → Run anyway</em> (the exe isn't code-signed).</li>
         <li><b>macOS</b>The first time only, <em>right-click</em> <code>QSF2LSS-GUI.app</code> → <em>Open</em> → <em>Open</em>. This clears Apple's “unidentified developer” warning.</li>
@@ -439,7 +441,7 @@ details.more .num{font-size:3.4rem;top:70px}
     <div class="body">
       <h3>Drop in your .qsf files</h3>
       <p>Drag one or more <code>.qsf</code> files, or a whole folder, onto the window. The drop zone lights up while you drag. If you drop a folder, it is searched recursively and every <code>.qsf</code> inside is added. Anything that isn't a <code>.qsf</code> is ignored. If you'd rather not drag, click the drop zone or use <strong>Add files…</strong> / <strong>Add folder…</strong>.</p>
-      <figure><img class="shot" src="img/02-drag-over.png" alt="The drop zone highlighted in blue while a file is dragged over the window" width="1202" height="792" loading="lazy"><figcaption>Fig. 2. The drop zone highlights while a file is dragged over it.</figcaption></figure>
+      <figure><img class="shot" src="img/02-drag-over.png" alt="The drop zone highlighted in blue while a file is dragged over the window" width="962" height="672" loading="lazy"><figcaption>Fig. 2. The drop zone highlights while a file is dragged over it.</figcaption></figure>
     </div>
   </div>
 
@@ -448,7 +450,7 @@ details.more .num{font-size:3.4rem;top:70px}
     <div class="body">
       <h3>Check the queue and choose where the output goes</h3>
       <p>Each file appears in the list with the status <strong>Ready</strong>. By default each <code>.lss</code> is written <em>next to its .qsf</em>. Click <strong>Change…</strong> to send everything to one folder instead. Select a file and press <kbd>Delete</kbd> (or <strong>Remove</strong>) to take it off the list, or press <strong>Clear</strong> to start over.</p>
-      <figure><img class="shot" src="img/03-added.png" alt="The demo file listed with status Ready" width="1202" height="792" loading="lazy"><figcaption>Fig. 3. The demo survey is queued and ready to convert.</figcaption></figure>
+      <figure><img class="shot" src="img/03-added.png" alt="The demo file listed with status Ready" width="962" height="672" loading="lazy"><figcaption>Fig. 3. The demo survey is queued and ready to convert.</figcaption></figure>
     </div>
   </div>
 
@@ -457,7 +459,7 @@ details.more .num{font-size:3.4rem;top:70px}
     <div class="body">
       <h3>Press Convert and read the result</h3>
       <p>Press <strong>Convert</strong>. Every file is <em>inspected</em>, <em>converted</em> and <em>verified</em> in the background, so the window stays responsive even for large batches. Each row then gets a coloured verdict: green <strong>OK</strong>, amber <strong>OK with warnings</strong> or red <strong>failed</strong>. Click a row to see its details.</p>
-      <figure><img class="shot" src="img/04-results.png" alt="Results after conversion: status OK with 5 warnings, input and output summaries" width="1202" height="792" loading="lazy"><figcaption>Fig. 4. The details pane shows the input analysis and the output summary.</figcaption></figure>
+      <figure><img class="shot" src="img/04-results.png" alt="Results after conversion: status OK with 5 warnings, input and output summaries" width="962" height="672" loading="lazy"><figcaption>Fig. 4. The details pane shows the input analysis and the output summary.</figcaption></figure>
       <p>The details pane has three parts:</p>
       <ul class="callouts">
         <li><b>Input (Qualtrics)</b>Survey name, language, 13 questions in 5 blocks, a breakdown by question type, and the detected features: display logic, piped text, JavaScript, embedded data. It also shows a <a href="#risk">migration risk score</a>.</li>
@@ -472,7 +474,7 @@ details.more .num{font-size:3.4rem;top:70px}
     <div class="body">
       <h3>Understand the verification checks</h3>
       <p>The demo ends as <strong>“OK with 5 warning(s)”</strong>, and every warning is expected for this survey. They show the kind of thing the report tells you:</p>
-      <figure><img class="shot" src="img/05-results-bottom.png" alt="Verification section with green checks, amber warnings and one info line" width="1202" height="792" loading="lazy"><figcaption>Fig. 5. Verification: ✓ passed, ! warning, i information.</figcaption></figure>
+      <figure><img class="shot" src="img/05-results-bottom.png" alt="Verification section with green checks, amber warnings and one info line" width="962" height="672" loading="lazy"><figcaption>Fig. 5. Verification: ✓ passed, ! warning, i information.</figcaption></figure>
       <table class="tbl">
         <tr><th>Result</th><th>What it says</th><th>Why</th></tr>
         <tr><td><span class="pill warn">!</span></td><td>13 questions in QSF, 12 in LSS</td><td>The deleted question in the <em>Trash</em> block is skipped on purpose.</td></tr>
