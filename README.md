@@ -20,6 +20,11 @@ Grab the build for your operating system from the [**Releases page**](https://gi
 | Mac with Apple Silicon (M1/M2/M3/M4) | `QSF2LSS-macOS-AppleSilicon.zip` |
 | Mac with Intel processor | `QSF2LSS-macOS-Intel.zip` |
 
+> **Easiest on a Mac:** open Terminal, paste this line and press Enter. It downloads the right version into `~/Applications/QSF2LSS` and opens it, without Apple's "could not verify" warning (macOS only checks files downloaded by a browser):
+> ```
+> A=$([ "$(uname -m)" = arm64 ] && echo AppleSilicon || echo Intel); mkdir -p ~/Applications/QSF2LSS && curl -fL "https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QSF2LSS-macOS-$A.zip" -o /tmp/QSF2LSS.zip && ditto -x -k /tmp/QSF2LSS.zip ~/Applications/QSF2LSS && open ~/Applications/QSF2LSS/QSF2LSS-GUI.app
+> ```
+
 > **Which Mac do I have?** Click the Apple menu () → **About This Mac**. If it says "Apple M1/M2/M3/M4" (or "Chip"), use the Apple Silicon build. If it says "Intel", use the Intel build.
 
 Unzip the download anywhere you like, then follow the Quick Start below. See the [code signing policy](#code-signing-policy) for the status of signed builds.
@@ -40,7 +45,7 @@ Each download contains **two programs** that do exactly the same conversion:
 1. Export your survey from Qualtrics as a `.qsf` file (see [Exporting from Qualtrics](#exporting-from-qualtrics) below)
 2. Start the program:
    - **Windows:** double-click `QSF2LSS-GUI.exe`
-   - **Mac:** the first time only, **right-click** `QSF2LSS-GUI.app` → **Open** → **Open** (this clears Apple's security warning — see [Troubleshooting](#troubleshooting)). After that you can double-click as usual.
+   - **Mac:** double-click `QSF2LSS-GUI.app`. If Apple says it "could not verify" the app, see [Troubleshooting](#troubleshooting) (one-time fix).
 3. Drag your `.qsf` files (or a whole folder) onto the window, or click **Add files…**
 4. Optionally choose an output folder (**Change…**; by default the `.lss` lands next to each `.qsf`)
 5. Press **Convert**. Each file gets a status line; click it to see the input analysis, the output summary and the verification checks
@@ -52,7 +57,7 @@ Each download contains **two programs** that do exactly the same conversion:
 2. Place the `.qsf` file(s) in the `input/` folder
 3. Run the converter:
    - **Windows:** double-click `QSF2LSS.exe`
-   - **Mac:** the first time only, **right-click** `QSF2LSS` → **Open** → **Open**. After that you can double-click as usual.
+   - **Mac:** double-click `QSF2LSS`. If Apple blocks it, see [Troubleshooting](#troubleshooting) (one-time fix).
 4. Find your `.lss` files and conversion report in the `output/` folder
 5. Import the `.lss` file into LimeSurvey
 
@@ -305,8 +310,14 @@ Search the `.lss` file for `FIXME` to find expressions that need manual adjustme
 **Windows SmartScreen warning**
 The `.exe` is not code-signed. Click "More info" then "Run anyway" to proceed.
 
-**macOS "cannot be opened" / "unidentified developer" warning**
-The Mac build is not code-signed by Apple. The first time you run it, **do not double-click** — instead **right-click (or Control-click) the `QSF2LSS` file → Open → Open**. This only needs to be done once; afterwards it opens normally. If macOS still blocks it, go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway**.
+**macOS "Apple could not verify…" / "cannot be opened" warning**
+The Mac build is not signed by Apple. Since macOS 15, right-click → Open no longer gets around this. Pick one:
+- **Already downloaded:** click **Done**, then paste this into Terminal and open the app again. It removes the browser's download mark from the unzipped folder:
+  ```
+  xattr -dr com.apple.quarantine ~/Downloads/QSF2LSS-macOS-*
+  ```
+- **Fresh install without the warning:** use the one-line Terminal command in [Download](#download).
+- **Without Terminal:** double-click the app and click **Done**. Then open **System Settings → Privacy & Security**, scroll down to **Security**, click **Open Anyway** next to "QSF2LSS-GUI was blocked", enter your password and click **Open**. The button is there for about an hour after the warning. Repeat for `QSF2LSS` if you use the console version.
 
 ---
 

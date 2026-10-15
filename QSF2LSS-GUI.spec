@@ -68,5 +68,7 @@ else:
                 'CFBundleTypeRole': 'Viewer',
             }],
             'NSHighResolutionCapable': True,
+            'CFBundleShortVersionString': os.environ.get('QTL_VERSION', '0.0.0'),
+            'CFBundleVersion': os.environ.get('QTL_VERSION', '0.0.0'),
         },
     )

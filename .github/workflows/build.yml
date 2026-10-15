@@ -54,6 +54,7 @@ jobs:
         shell: bash
         run: |
           if [ "${{ runner.os }}" = "Windows" ]; then export QTL_VERSION_FILE="$PWD/build/version_info.txt"; fi
+          export QTL_VERSION="$(python -c "import re,sys; print('.'.join((re.findall(r'\d+', sys.argv[1]) + ['0']*3)[:3]))" "${{ github.ref_name }}")"
           pyinstaller QSF2LSS-GUI.spec --noconfirm
 
       - name: Upload unsigned Windows executables for signing
@@ -103,7 +104,8 @@ jobs:
           if [ "${{ runner.os }}" = "Windows" ]; then
             7z a "../${{ matrix.package_name }}.zip" .
           else
-            zip -r "../${{ matrix.package_name }}.zip" .
+            # -y keeps the symlinks inside the .app bundle intact (needed for its code signature)
+            zip -ry "../${{ matrix.package_name }}.zip" .
           fi
 
       - name: Upload build artifact

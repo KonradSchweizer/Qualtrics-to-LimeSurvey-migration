@@ -331,6 +331,15 @@ header.hero{padding:72px 0 56px}
 .dl-alt small{color:var(--muted)}
 .dl-facts{list-style:none;padding:0;margin:18px 0 0;display:flex;flex-wrap:wrap;gap:6px 20px;font-size:.9rem;color:var(--ink-2)}
 .dl-facts li::before{content:"✓ ";color:var(--lime-ink);font-weight:600}
+.mac{margin:16px 0 0;border:1px solid var(--rule);border-radius:10px;padding:0 16px;background:var(--paper)}
+.mac>summary{padding:12px 0;font-weight:600}
+.mac>div{padding:0 0 14px;font-size:.93rem;color:var(--ink-2)}
+.mac p{margin:8px 0}
+.cmd{display:flex;align-items:stretch;gap:8px;margin:8px 0 12px}
+.cmd code{flex:1;min-width:0;display:block;overflow-x:auto;white-space:pre;background:var(--ink);color:var(--paper);border-radius:6px;padding:10px 12px;font-size:.8rem;line-height:1.5}
+.cmd button{flex:none;font:600 .85rem var(--sans);border:1.5px solid var(--ink);border-radius:6px;background:var(--card);color:var(--ink);padding:0 14px;cursor:pointer}
+.cmd button:hover{background:var(--paper-2)}
+.mac ol{margin:6px 0 4px;padding-left:1.3em}
 .dl-first{font-size:.86rem;color:var(--muted);margin:16px 0 0;border-top:1px solid var(--rule);padding-top:14px}
 .aibox{margin:0;max-width:none}
 nav .nav-dl{padding:.4em .9em;font-size:.88rem;background:var(--lime);color:#1d1f1a;border-color:#1d1f1a}
@@ -379,7 +388,24 @@ details.more .num{font-size:3.4rem;top:70px}
       <li>Works offline, files stay on your computer</li>
       <li>Free &amp; open source (MIT)</li>
     </ul>
-    <p class="dl-first"><b>Opening it the first time:</b> on Windows, click <em>More info → Run anyway</em> if a blue warning appears. On a Mac, right-click the app → <em>Open</em> → <em>Open</em>. The program isn't code-signed yet, see <a href="#signing">code signing policy</a>.</p>
+    <details class="mac" id="mac">
+      <summary>On a Mac? Install with one line and skip Apple's warning</summary>
+      <div>
+        <p>macOS blocks unsigned apps downloaded in a browser (<em>“Apple could not verify QSF2LSS is free of malware…”</em>). To avoid that, open <b>Terminal</b> (press <kbd>⌘</kbd> <kbd>Space</kbd>, type <em>Terminal</em>, press Enter), paste this line and press Enter:</p>
+        <div class="cmd"><code id="mac-cmd">A=$([ "$(uname -m)" = arm64 ] &amp;&amp; echo AppleSilicon || echo Intel); mkdir -p ~/Applications/QSF2LSS &amp;&amp; curl -fL "https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/releases/latest/download/QSF2LSS-macOS-$A.zip" -o /tmp/QSF2LSS.zip &amp;&amp; ditto -x -k /tmp/QSF2LSS.zip ~/Applications/QSF2LSS &amp;&amp; open ~/Applications/QSF2LSS/QSF2LSS-GUI.app</code><button type="button" data-copy="mac-cmd">Copy</button></div>
+        <p>It picks the right version for your Mac, puts it in <code>Applications/QSF2LSS</code> in your home folder and opens it. Later, start it from there or with Spotlight (<em>QSF2LSS-GUI</em>). It works because macOS only checks files that a browser downloaded, and Terminal's download tool doesn't mark them for checking.</p>
+        <p><b>Already downloaded the zip and got the warning?</b> Click <em>Done</em>, then paste this into Terminal and open the app again:</p>
+        <div class="cmd"><code id="mac-unq">xattr -dr com.apple.quarantine ~/Downloads/QSF2LSS-macOS-*</code><button type="button" data-copy="mac-unq">Copy</button></div>
+        <p><b>Without Terminal:</b></p>
+        <ol>
+          <li>Double-click <code>QSF2LSS-GUI</code> and click <em>Done</em> when the warning appears.</li>
+          <li>Open <em>System Settings → Privacy &amp; Security</em> and scroll down to <em>Security</em>.</li>
+          <li>Click <em>Open Anyway</em> next to “QSF2LSS-GUI was blocked”, enter your password, then click <em>Open</em>.</li>
+        </ol>
+        <p>You only need to do this once. The button appears for about an hour after the warning.</p>
+      </div>
+    </details>
+    <p class="dl-first"><b>Opening it the first time on Windows:</b> click <em>More info → Run anyway</em> if a blue warning appears. The program isn't code-signed yet, see <a href="#signing">code signing policy</a>.</p>
   </div>
 
   <p class="aibox reveal d4"><b>Made with AI:</b> this website and the converter's code were created by AI (Claude, by Anthropic) based on an idea by Konrad Schweizer. The screenshots come from the real program; the demo survey is made up. Spotted a mistake? <a href="https://github.com/KonradSchweizer/Qualtrics-to-LimeSurvey-migration/issues">Tell us on GitHub</a>.</p>
@@ -431,7 +457,7 @@ details.more .num{font-size:3.4rem;top:70px}
       <figure><img class="shot" src="img/01-start.png" alt="QSF2LSS window right after starting: empty file list and details pane" width="962" height="672" loading="lazy"><figcaption>Fig. 1. The empty window when the program starts.</figcaption></figure>
       <ul class="callouts">
         <li><b>Windows</b>Double-click <code>QSF2LSS-GUI.exe</code>. If SmartScreen warns you, click <em>More info → Run anyway</em> (the exe isn't code-signed).</li>
-        <li><b>macOS</b>The first time only, <em>right-click</em> <code>QSF2LSS-GUI.app</code> → <em>Open</em> → <em>Open</em>. This clears Apple's “unidentified developer” warning.</li>
+        <li><b>macOS</b>If Apple says it “could not verify” the app, use the one-line Terminal install or <em>Open Anyway</em> in System Settings, see <a href="#mac">On a Mac?</a> next to the download button.</li>
       </ul>
     </div>
   </div>
@@ -803,7 +829,7 @@ question_attributes:
   <h3>Questions &amp; troubleshooting</h3>
   <details><summary>Do I need Python?</summary><div>No. The downloads bundle everything. If you prefer to run from source: Python 3.10+, then <code>python source/gui.py</code> (window) or <code>python source/convert.py input/ -o output/</code> (command line). For drag &amp; drop, also run <code>pip install tkinterdnd2</code>. Without it, the drop zone works as a click-to-browse button.</div></details>
   <details><summary>Windows says “Windows protected your PC”</summary><div>The exe isn't code-signed yet (see <a href="#signing">code signing policy</a>). Click <em>More info → Run anyway</em>. If you'd rather not, run from source or build it yourself; the GitHub Actions workflow in the repository shows exactly how the release builds are made.</div></details>
-  <details><summary>macOS says the app “cannot be opened”</summary><div>Right-click (or Control-click) the app → <em>Open</em> → <em>Open</em>. You only need to do this once. If it's still blocked, go to <em>System Settings → Privacy &amp; Security</em> and click <em>Open Anyway</em>.</div></details>
+  <details><summary>macOS says “Apple could not verify…” or the app “cannot be opened”</summary><div>The app isn't signed by Apple, which costs $99 a year. Since macOS 15, right-click → <em>Open</em> no longer gets around this. Install with the one-line Terminal command instead, or click <em>Open Anyway</em> under <em>System Settings → Privacy &amp; Security</em>. Both are explained under <a href="#mac">On a Mac?</a> next to the download button.</div></details>
   <details><summary>The window doesn't open or closes immediately</summary><div>Run the console version <code>QSF2LSS</code> instead. It prints any error message, or run <code>python source/gui.py</code> from a terminal to see the full error.</div></details>
   <details><summary>Why does the question count differ?</summary><div>Usually it's expected. Questions in the Trash block aren't converted, and the inspector counts every question element, including unused ones.</div></details>
   <details><summary>Can I convert many surveys at once?</summary><div>Yes. Drop a whole folder onto the window, or put all files in <code>input/</code> for the folder-based version. One report covers the whole batch.</div></details>
@@ -845,6 +871,7 @@ question_attributes:
   const names = {win: ['Download for Windows', '20 MB'], arm: ['Download for Mac (Apple Silicon)', '44 MB'], intel: ['Download for Mac (Intel)', '47 MB']};
   let pick = 'win';
   if (/Mac/i.test(navigator.platform) || /Mac OS X/.test(navigator.userAgent)) {
+    document.getElementById('mac').open = true;
     pick = 'arm';   // most Macs since 2020; Safari can't tell, so Intel stays one click away
     try {
       const h = navigator.userAgentData && await navigator.userAgentData.getHighEntropyValues(['architecture']);
@@ -854,6 +881,14 @@ question_attributes:
   main.href = links[pick].href; label.textContent = names[pick][0]; meta.textContent = 'v1.2.0 · zip · ' + names[pick][1];
   links[pick].classList.add('current');
 })();
+
+// Copy buttons for the Terminal commands
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+  const text = document.getElementById(b.dataset.copy).textContent;
+  try { await navigator.clipboard.writeText(text); b.textContent = 'Copied'; }
+  catch (e) { getSelection().selectAllChildren(document.getElementById(b.dataset.copy)); b.textContent = 'Press ⌘C'; }
+  setTimeout(() => b.textContent = 'Copy', 2000);
+}));
 
 // Links into collapsed sections open them first
 const openTarget = () => {
