@@ -22,7 +22,7 @@ Grab the build for your operating system from the [**Releases page**](https://gi
 
 > **Which Mac do I have?** Click the Apple menu () → **About This Mac**. If it says "Apple M1/M2/M3/M4" (or "Chip"), use the Apple Silicon build. If it says "Intel", use the Intel build.
 
-Unzip the download anywhere you like, then follow the Quick Start below.
+Unzip the download anywhere you like, then follow the Quick Start below. See the [code signing policy](#code-signing-policy) for the status of signed builds.
 
 Each download contains **two programs** that do exactly the same conversion:
 
@@ -321,6 +321,19 @@ The Mac build is not code-signed by Apple. The first time you run it, **do not d
 | **Self-Contained Executable** | Built with PyInstaller, bundles a Python interpreter with the source code. No installation required, no files written outside the application folder. |
 | **Source Code Included** | Full source code in the `source/` folder for transparency and auditability. Inspect, modify, or run directly with Python instead of the `.exe`. |
 | **Suitable for Research Data** | Fully offline and local processing makes it suitable for sensitive research data and survey instruments under ethics board / IRB requirements. |
+
+---
+
+## Code signing policy
+
+Windows releases are being set up for free code signing provided by [SignPath.io](https://signpath.io), certificate by [SignPath Foundation](https://signpath.org). The application is still pending, so current downloads are unsigned. Once signing is active, every signed file is built automatically from this repository's source code by [GitHub Actions](.github/workflows/build.yml), and each release is approved by hand before it is signed.
+
+- **Committers and reviewers:** [Konrad Schweizer](https://github.com/KonradSchweizer)
+- **Approvers:** [Konrad Schweizer](https://github.com/KonradSchweizer)
+
+**Privacy:** this program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it. It has no network functionality at all.
+
+The same policy is on the [website](https://konradschweizer.github.io/Qualtrics-to-LimeSurvey-migration/#signing).
 
 ---
 
